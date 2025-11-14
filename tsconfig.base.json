@@ -16,6 +16,10 @@
     "skipLibCheck": true,
     "strict": true,
     "target": "es2022",
-    "customConditions": ["@org/source"]
+    "baseUrl": ".",
+    "paths": {
+      "@fpl/contracts": ["libs/contracts/src/index.ts"],
+      "@fpl/utils": ["libs/utils/src/index.ts"]
+    }
   }
 }

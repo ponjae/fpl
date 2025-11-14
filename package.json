@@ -44,6 +44,7 @@
     "eslint-plugin-react-hooks": "5.0.0",
     "jiti": "2.4.2",
     "jsdom": "~22.1.0",
+    "jsonc-eslint-parser": "^2.1.0",
     "nx": "22.0.3",
     "prettier": "^2.6.2",
     "sass": "^1.55.0",
@@ -54,6 +55,8 @@
     "vitest": "^3.0.0"
   },
   "workspaces": [
-    "apps/*"
+    "apps/*",
+    "libs/contracts",
+    "libs/utils"
   ]
 }
