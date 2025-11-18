@@ -19,8 +19,11 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@fpl/contracts": ["libs/contracts/src/index.ts"],
-      "@fpl/utils": ["libs/utils/src/index.ts"]
+      "@fpl/contracts/self-service": [
+        "libs/contracts/self-service/src/index.ts"
+      ],
+      "@fpl/utils": ["libs/utils/src/index.ts"],
+      "fpl": ["libs/contracts/fpl/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

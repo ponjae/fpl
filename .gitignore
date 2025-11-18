@@ -49,3 +49,6 @@ nx.bat
 
 vite.config.*.timestamp*
 vitest.config.*.timestamp*
+
+# Temporary files
+/old/*
