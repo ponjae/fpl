@@ -1,25 +1,27 @@
 {
+  "compileOnSave": false,
   "compilerOptions": {
-    "composite": true,
-    "declarationMap": true,
-    "emitDeclarationOnly": true,
-    "importHelpers": true,
-    "isolatedModules": true,
-    "lib": ["es2022"],
-    "module": "esnext",
-    "moduleResolution": "bundler",
-    "noEmitOnError": true,
-    "noFallthroughCasesInSwitch": true,
-    "noImplicitOverride": true,
-    "noImplicitReturns": true,
-    "noUnusedLocals": true,
-    "skipLibCheck": true,
+    "rootDir": ".",
     "strict": true,
+    "sourceMap": true,
+    "declaration": false,
+    "noImplicitAny": false,
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "noImplicitOverride": true,
+    "esModuleInterop": true,
+    "importHelpers": true,
     "target": "es2022",
+    "module": "esnext",
+    "lib": ["es2022", "dom"],
+    "skipLibCheck": true,
+    "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
       "@fpl/contracts": ["libs/contracts/src/index.ts"],
       "@fpl/utils": ["libs/utils/src/index.ts"]
     }
-  }
+  },
+  "exclude": ["node_modules", "tmp"]
 }
