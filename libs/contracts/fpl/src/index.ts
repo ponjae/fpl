@@ -1,1 +1,2 @@
-export * from './lib/fpl';
+export * from './lib/types';
+export * from './lib/typeguards';

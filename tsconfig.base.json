@@ -22,7 +22,7 @@
       "@fpl/contracts/self-service": [
         "libs/contracts/self-service/src/index.ts"
       ],
-      "@fpl/contracts": ["libs/contracts/fpl/src/index.ts"],
+      "@fpl/contracts/fpl": ["libs/contracts/fpl/src/index.ts"],
       "@fpl/network": ["libs/network/src/index.ts"],
       "@fpl/utils": ["libs/utils/src/index.ts"]
     }
