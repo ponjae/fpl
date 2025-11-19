@@ -1,14 +1,6 @@
+import { identity } from './function';
 import { isDefined } from './typeguards';
 import { Collection, CompareFn, TransformFn, UniqueFn } from './types';
-
-/**
- * Identity function.
- *
- * @param value - the value.
- *
- * @returns the value given.
- */
-export const identity = <T>(value: T) => value;
 
 /**
  * Transform to array.

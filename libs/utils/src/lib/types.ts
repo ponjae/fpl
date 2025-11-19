@@ -36,3 +36,9 @@ export type FilterFn<T> = (value: T) => boolean;
  * Transforms values of type T to type S.
  */
 export type TransformFn<S, T = S> = (value: S) => T;
+
+/**
+ * Function type.
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type Fn = (...args: any[]) => any;
