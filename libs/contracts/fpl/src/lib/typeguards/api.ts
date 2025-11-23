@@ -136,7 +136,7 @@ export const isRawTeam = (t: unknown): t is RawTeam =>
  *
  * @returns true if c is a ChipPlay, false otherwise.
  */
-const isChipPlay = (c: unknown): c is ChipPlay =>
+export const isChipPlay = (c: unknown): c is ChipPlay =>
   isObject(c) && isString(c.chip_name) && isNumber(c.num_played);
 
 /**
@@ -146,7 +146,7 @@ const isChipPlay = (c: unknown): c is ChipPlay =>
  *
  * @returns true if t is a TopElementInfo, false otherwise.
  */
-const isTopElementInfo = (t: unknown): t is TopElementInfo =>
+export const isTopElementInfo = (t: unknown): t is TopElementInfo =>
   isObject(t) && isNumber(t.id) && isNumber(t.points);
 
 /**

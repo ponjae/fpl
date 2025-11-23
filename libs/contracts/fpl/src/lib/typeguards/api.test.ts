@@ -6,6 +6,8 @@ import {
   isEvent,
   isElementType,
   isFixture,
+  isChipPlay,
+  isTopElementInfo,
 } from './api';
 
 const validFixture = {
@@ -222,6 +224,30 @@ describe('Typeguards: API', () => {
         // missing required fields
       };
       expect(isFixture(invalidFixture)).toBe(false);
+    });
+  });
+
+  describe('isTopElementInfo', () => {
+    it('should return true for valid TopElementInfo', () => {
+      const validTopElementInfo = { id: 531, points: 17 };
+      expect(isTopElementInfo(validTopElementInfo)).toBe(true);
+    });
+
+    it('should return false for invalid TopElementInfo', () => {
+      const invalidTopElementInfo = { id: '531', points: 17 };
+      expect(isTopElementInfo(invalidTopElementInfo)).toBe(false);
+    });
+  });
+
+  describe('isChipPlay', () => {
+    it('should return true for valid ChipPlay', () => {
+      const validChipPlay = { chip_name: 'bboost', num_played: 342779 };
+      expect(isChipPlay(validChipPlay)).toBe(true);
+    });
+
+    it('should return false for invalid ChipPlay', () => {
+      const invalidChipPlay = { chip_name: 'bboost', num_played: '342779' };
+      expect(isChipPlay(invalidChipPlay)).toBe(false);
     });
   });
 });
