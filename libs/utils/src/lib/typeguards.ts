@@ -107,6 +107,15 @@ export const isStringMember = <T extends string>(
 export const isBoolean = (b: unknown): b is boolean => typeof b === 'boolean';
 
 /**
+ * Check if d is a Date.
+ *
+ * @param d - the value to check.
+ *
+ * @returns true if d is a Date, otherwise false.
+ */
+export const isDate = (d: unknown): d is Date => d instanceof Date;
+
+/**
  * Check if a value is defined.
  *
  * @param value - the value to check.
