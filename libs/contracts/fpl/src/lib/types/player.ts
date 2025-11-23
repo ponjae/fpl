@@ -1,7 +1,8 @@
+import { FixtureData, Games } from './fixture';
+
 /**
  * Player-related types used internally in the application
  */
-
 export type ProcessedPlayer = {
   fixtureData: FixtureData;
   generalInfo: GeneralPlayerInfo;
@@ -42,24 +43,6 @@ export type PlayerStats = {
   total_points: number;
   transfers_in: number;
   transfers_out: number;
-};
-
-/**
- * Fixture difficulty related data.
- */
-export type FixtureData = {
-  fdr1?: number;
-  fdr5?: number;
-  fdr_remaining?: number;
-};
-
-/**
- * Games related data.
- */
-export type Games = {
-  games_next_gw: number;
-  games_next_five: number;
-  total_games_remaining: number;
 };
 
 /**
