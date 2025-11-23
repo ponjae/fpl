@@ -6,11 +6,7 @@ import { TeamDataDict } from './team';
  * The complete processed data structure used internally in the application.
  */
 export type ProcessedData = {
-  players: {
-    byTeam: TeamPlayerDict;
-    byPosition: PositionPlayerDict;
-    byId: Record<number, ProcessedPlayer>;
-  };
+  players: PlayerDict;
   gameweeks: GameweekData;
   fixtures: FixturesByGameweek;
   readableFixtures: ReadableFixture;
@@ -19,4 +15,13 @@ export type ProcessedData = {
   idPositionDict: Record<number, string>;
   currentGameweek: number;
   lastUpdated: Date;
+};
+
+/**
+ * Dictionary type for processed players.
+ */
+export type PlayerDict = {
+  byTeam: TeamPlayerDict;
+  byPosition: PositionPlayerDict;
+  byId: Record<number, ProcessedPlayer>;
 };

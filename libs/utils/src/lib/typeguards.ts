@@ -197,6 +197,9 @@ export const isObjectOfType = <KeyType extends PropertyKey, ValueType>(
   valueTypeGuard: InferFn<ValueType>
 ): o is Record<KeyType, ValueType> =>
   isObject(o) &&
-  Object.entries(o).every(
-    ([key, value]) => keyTypeGuard(key) && valueTypeGuard(value)
-  );
+  Object.entries(o).every(([key, value]) => {
+    // Object.entries always returns string keys, so we need to convert
+    // numeric string keys back to numbers for validation
+    const parsedKey = isNaN(Number(key)) ? key : Number(key);
+    return keyTypeGuard(parsedKey) && valueTypeGuard(value);
+  });
