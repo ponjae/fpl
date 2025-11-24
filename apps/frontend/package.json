@@ -40,7 +40,7 @@
         }
       },
       "test": {
-        "executor": "@nx/vite:test",
+        "executor": "@nx/vitest:test",
         "outputs": [
           "{workspaceRoot}/apps/frontend/test-output/vitest/coverage"
         ],

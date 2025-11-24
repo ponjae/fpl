@@ -1,28 +1,20 @@
 {
   "$schema": "./node_modules/nx/schemas/nx-schema.json",
+  "installation": { "version": "22.1.1" },
   "targetDefaults": {
     "build": {
       "dependsOn": ["^build"],
       "inputs": ["production", "^production"]
     },
-    "test": {
-      "inputs": ["default", "^default"],
-      "cache": true
-    },
+    "test": { "inputs": ["default", "^default"], "cache": true },
     "lint": {
       "inputs": ["default", "{workspaceRoot}/.eslintrc.json"],
       "cache": true
     },
-    "e2e": {
-      "inputs": ["default", "^default"]
-    },
-    "stylelint": {
-      "cache": true
-    },
-    "@nx/vite:test": {
-      "inputs": ["default", "^default"],
-      "cache": true
-    },
+    "e2e": { "inputs": ["default", "^default"] },
+    "stylelint": { "cache": true },
+    "@nx/vite:test": { "inputs": ["default", "^default"], "cache": true },
+    "@nx/vitest:test": { "inputs": ["default", "^default"], "cache": true },
     "@nx/eslint:lint": {
       "inputs": ["default", "{workspaceRoot}/.eslintrc.json"],
       "cache": true
@@ -51,9 +43,7 @@
         "linter": "eslint",
         "bundler": "vite"
       },
-      "component": {
-        "style": "scss"
-      },
+      "component": { "style": "scss" },
       "library": {
         "style": "scss",
         "linter": "eslint",

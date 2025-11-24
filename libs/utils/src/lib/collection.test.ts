@@ -7,7 +7,6 @@ import {
   groupBy,
   groupByCompare,
   hasItem,
-  identity,
   intersection,
   intersects,
   isEqualSet,
@@ -20,6 +19,7 @@ import {
   union,
   unique,
 } from './collection';
+import { identity } from './function';
 import { CompareFn } from './types';
 
 type Typed = { type: string; value: number };
