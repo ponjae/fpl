@@ -1,0 +1,10 @@
+echo "Running lint..."
+npm run lint || exit 1
+
+echo "Running build..."
+npm run build || exit 1
+
+echo "Running tests..."
+npm run test || exit 1
+
+echo "All checks passed. Push allowed."
