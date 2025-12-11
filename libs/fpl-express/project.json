@@ -1,0 +1,20 @@
+{
+  "name": "fpl-express",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/fpl-express/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/fpl-express",
+        "tsConfig": "libs/fpl-express/tsconfig.lib.json",
+        "packageJson": "libs/fpl-express/package.json",
+        "main": "libs/fpl-express/src/index.ts",
+        "assets": ["libs/fpl-express/*.md"]
+      }
+    }
+  }
+}

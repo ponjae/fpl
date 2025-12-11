@@ -24,7 +24,8 @@
       ],
       "@fpl/contracts/fpl": ["libs/contracts/fpl/src/index.ts"],
       "@fpl/network": ["libs/network/src/index.ts"],
-      "@fpl/utils": ["libs/utils/src/index.ts"]
+      "@fpl/utils": ["libs/utils/src/index.ts"],
+      "@fpl/fpl-express": ["libs/fpl-express/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]
