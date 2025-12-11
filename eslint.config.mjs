@@ -55,17 +55,19 @@ export default [
       '@typescript-eslint/no-unused-vars': [
         'warn',
         {
+          args: 'all',
           argsIgnorePattern: '^_',
+          vars: 'all',
           varsIgnorePattern: '^_',
+          caughtErrors: 'all',
           caughtErrorsIgnorePattern: '^_',
+          ignoreRestSiblings: false,
         },
       ],
-      '@typescript-eslint/no-extra-semi': 'error',
       'lines-between-class-members': 'off',
       'no-constant-condition': 'off',
       'no-inner-declarations': 'off',
       'no-unused-vars': 'off',
-      'no-extra-semi': 'off',
       'import/no-unresolved': 'off',
       'import/order': [
         'warn',
@@ -116,10 +118,7 @@ export default [
   },
   {
     files: ['**/*.js', '**/*.jsx'],
-    rules: {
-      '@typescript-eslint/no-extra-semi': 'error',
-      'no-extra-semi': 'off',
-    },
+    rules: {},
   },
   {
     files: ['**/*.jsx', '**/*.tsx'],
