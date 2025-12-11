@@ -1,0 +1,14 @@
+{
+  "name": "environment",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/environment/src",
+  "projectType": "library",
+  "tags": [],
+  "// targets": "to see all targets run: nx show project environment --web",
+  "targets": {
+    "test": {
+      "executor": "@nx/vitest:test",
+      "outputs": ["{workspaceRoot}/coverage/libs/environment"]
+    }
+  }
+}

@@ -1,8 +1,5 @@
 {
   "$schema": "./node_modules/nx/schemas/nx-schema.json",
-  "installation": {
-    "version": "22.1.1"
-  },
   "targetDefaults": {
     "build": {
       "dependsOn": ["^build"],
