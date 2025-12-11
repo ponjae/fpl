@@ -4,18 +4,6 @@ import { PathParams, defaultTo } from '@fpl/utils';
 import { ApplicationService } from './ApplicationService';
 import { Req } from './Req';
 
-export const Environments = {
-  /**
-   * The server is running in our cte environment.
-   */
-  Cte: 'cte',
-  /**
-   * The server is running in our prod environment.
-   */
-  Prod: 'prod',
-} as const;
-export type Environment = (typeof Environments)[keyof typeof Environments];
-
 export class ApplicationContext<
   T extends object = Record<string, never>,
   U extends string = string
@@ -48,36 +36,12 @@ export class ApplicationContext<
   private readonly configuration: T;
 
   /**
-   * The environment.
-   */
-  private readonly env: Environment;
-
-  /**
    * Constructor.
    *
    * @param configuration - the configuration.
    */
-  public constructor(configuration: T, env: Environment) {
+  public constructor(configuration: T) {
     this.configuration = configuration;
-    this.env = env;
-  }
-
-  /**
-   * Check if server is running in local host in dev mode.
-   *
-   * @returns true when server is running locally, otherwise false.
-   */
-  public isLocalEnvironment(): boolean {
-    return process.env.LOCAL_ENV === 'true';
-  }
-
-  /**
-   * Get the environment.
-   *
-   * @returns the environment.
-   */
-  public getEnvironment(): Environment {
-    return this.env;
   }
 
   /**
