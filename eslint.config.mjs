@@ -10,6 +10,7 @@ export default [
   ...nx.configs['flat/javascript'],
   {
     ignores: [
+      '**/node_modules',
       '**/dist',
       '**/build',
       '**/.react-router',
@@ -60,7 +61,6 @@ export default [
           caughtErrorsIgnorePattern: '^_',
         },
       ],
-      '@typescript-eslint/no-extra-semi': 'error',
       'lines-between-class-members': 'off',
       'no-constant-condition': 'off',
       'no-inner-declarations': 'off',
@@ -116,10 +116,7 @@ export default [
   },
   {
     files: ['**/*.js', '**/*.jsx'],
-    rules: {
-      '@typescript-eslint/no-extra-semi': 'error',
-      'no-extra-semi': 'off',
-    },
+    rules: {},
   },
   {
     files: ['**/*.jsx', '**/*.tsx'],
