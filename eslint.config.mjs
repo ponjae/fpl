@@ -1,5 +1,4 @@
 import nx from '@nx/eslint-plugin';
-import tseslint from 'typescript-eslint';
 import eslintPluginImport from 'eslint-plugin-import';
 import eslintPluginTsdoc from 'eslint-plugin-tsdoc';
 import eslintPluginReactHooks from 'eslint-plugin-react-hooks';
@@ -61,6 +60,7 @@ export default [
           caughtErrorsIgnorePattern: '^_',
         },
       ],
+      '@typescript-eslint/no-extra-semi': 'error',
       'lines-between-class-members': 'off',
       'no-constant-condition': 'off',
       'no-inner-declarations': 'off',
@@ -116,7 +116,10 @@ export default [
   },
   {
     files: ['**/*.js', '**/*.jsx'],
-    rules: {},
+    rules: {
+      '@typescript-eslint/no-extra-semi': 'error',
+      'no-extra-semi': 'off',
+    },
   },
   {
     files: ['**/*.jsx', '**/*.tsx'],
