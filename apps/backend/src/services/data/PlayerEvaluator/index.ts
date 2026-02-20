@@ -1,5 +1,5 @@
 import { ProcessedPlayer, PlayerValue } from '@fpl/contracts/fpl';
-import { ApplicationService } from '../app';
+import { ApplicationService } from '../../../app';
 
 export class PlayerEvaluator extends ApplicationService {
   private readonly GAMEWEEKS_IN_SEASON = 38;

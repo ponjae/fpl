@@ -1,5 +1,5 @@
 import { Fixture, FDRDict } from '@fpl/contracts/fpl';
-import { ApplicationService } from '../app';
+import { ApplicationService } from '../../../app';
 
 export class FDRCalculator extends ApplicationService {
   /**

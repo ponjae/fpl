@@ -8,31 +8,17 @@ import {
   RawTeam,
   ElementType,
 } from '@fpl/contracts/fpl';
-import { ApplicationService } from '../app';
-import { TEAM_DATA_DICT } from '../config/teams';
-import { DataFetcher } from './DataFetcher';
+import { ApplicationService } from '../../app';
+import { TEAM_DATA_DICT } from '../../config/teams';
 import { DataProcessor } from './DataProcessor';
+import { DataService } from './DataService';
 import { FDRCalculator } from './FDRCalculator';
+import { PlayerEvaluator } from './PlayerEvaluator';
 
 export class FPLDataService extends ApplicationService {
   private cachedData: ProcessedData | null = null;
   private lastFetchTime: number | null = null;
   private cacheDuration: number = 60 * 60 * 1000; // 1 hour
-
-  /**
-   * Constructor.
-   *
-   * @param dataFetcher - the data fetcher.
-   * @param dataProcessor - the data processor.
-   * @param fdrCalculator - the FDR calculator.
-   */
-  public constructor(
-    private readonly dataFetcher: DataFetcher,
-    private readonly dataProcessor: DataProcessor,
-    private readonly fdrCalculator: FDRCalculator
-  ) {
-    super();
-  }
 
   /**
    * Get complete processed data (from cache or fetch).
@@ -48,44 +34,53 @@ export class FPLDataService extends ApplicationService {
    * Force refresh from FPL API.
    */
   public async refresh(): Promise<void> {
-    const rawData = await this.dataFetcher.fetchRawData();
-    const fixtures = await this.dataFetcher.fetchFixtures();
+    // Instantiate services (no constructor dependencies)
+    const dataService = new DataService();
+    const fdrCalculator = new FDRCalculator();
+    const dataProcessor = new DataProcessor();
+    const playerEvaluator = new PlayerEvaluator();
+
+    // 1. Fetch raw data and fixtures
+    const { allData, fixtures } = await dataService.getData();
 
     // 2. Calculate FDR dict
-    const fdrDict = this.fdrCalculator.calculateFDRDict(fixtures);
+    const fdrDict = fdrCalculator.calculateFDRDict(fixtures);
 
     // 3. Find current gameweek
-    const currentGameweek = this.getCurrentGameweek(rawData.events);
+    const currentGameweek = this.getCurrentGameweek(allData.events);
 
-    // 4. Process all players
-    const processedPlayers = rawData.elements.map((rawPlayer) =>
-      this.dataProcessor.processPlayer(rawPlayer, fdrDict, currentGameweek)
+    // 4. Process all players (passing services as parameters)
+    const processedPlayers = allData.elements.map((rawPlayer) =>
+      dataProcessor.processPlayer(
+        rawPlayer,
+        fdrDict,
+        currentGameweek,
+        fdrCalculator,
+        playerEvaluator
+      )
     );
 
     // 5. Group players by team/position/id
-    const byTeam = this.dataProcessor.groupByTeam(
+    const byTeam = dataProcessor.groupByTeam(processedPlayers, allData.teams);
+    const byPosition = dataProcessor.groupByPosition(
       processedPlayers,
-      rawData.teams
+      allData.element_types
     );
-    const byPosition = this.dataProcessor.groupByPosition(
-      processedPlayers,
-      rawData.element_types
-    );
-    const byId = this.dataProcessor.createPlayerDict(processedPlayers);
+    const byId = dataProcessor.createPlayerDict(processedPlayers);
 
     // 6. Extract gameweek data
-    const gameweeks = this.extractGameweekData(rawData.events);
+    const gameweeks = this.extractGameweekData(allData.events);
 
     // 7. Process fixtures into structured format
     const fixturesByGameweek = this.organizeFixturesByGameweek(fixtures);
     const readableFixtures = this.createReadableFixtures(
       fixturesByGameweek,
-      rawData.teams
+      allData.teams
     );
 
     // 9. Create id→name mappings
-    const idTeamDict = this.createIdTeamDict(rawData.teams);
-    const idPositionDict = this.createIdPositionDict(rawData.element_types);
+    const idTeamDict = this.createIdTeamDict(allData.teams);
+    const idPositionDict = this.createIdPositionDict(allData.element_types);
 
     // 10. Store in cache
     this.cachedData = {

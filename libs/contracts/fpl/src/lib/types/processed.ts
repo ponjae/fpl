@@ -1,5 +1,5 @@
-import { TeamPlayerDict, PositionPlayerDict, ProcessedPlayer } from './player';
 import { GameweekData, FixturesByGameweek, ReadableFixture } from './fixture';
+import { TeamPlayerDict, PositionPlayerDict, ProcessedPlayer } from './player';
 import { TeamDataDict } from './team';
 
 /**

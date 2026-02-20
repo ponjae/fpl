@@ -1,17 +1,17 @@
-import { AllData } from '@fpl/contracts/fpl';
+import { Fixture } from '@fpl/contracts/fpl';
 import { EndpointErrorBody } from '@fpl/express-app';
 import { HttpError } from '@fpl/fpl-express';
 import { Method, Request, RequestError } from '@fpl/network';
-import { ApplicationEndpoint } from '../../../app';
+import { ApplicationEndpoint } from '../../../../app';
 
-export class GetRawData extends ApplicationEndpoint<AllData> {
+export class GetFixtures extends ApplicationEndpoint<Fixture[]> {
   /**
    * @override
    */
-  protected async sendRequest(): Promise<AllData> {
-    const response = await new Request<AllData>(
+  protected async sendRequest(): Promise<Fixture[]> {
+    const response = await new Request<Fixture[]>(
       Method.Get,
-      'https://fantasy.premierleague.com/api/bootstrap-static/'
+      'https://fantasy.premierleague.com/api/fixtures'
     ).send();
 
     return response.getData();

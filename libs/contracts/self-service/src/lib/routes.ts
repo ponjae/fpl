@@ -9,8 +9,23 @@ export const BasePath = '/api';
  * The available routes in the API.
  */
 export const Routes = {
+  // Players
+  Players: '/players',
+  PlayersByTeam: '/players/team/:teamId',
+  PlayersByPosition: '/players/position/:position',
+  Player: '/players/:id',
+
+  // Teams
   Teams: '/teams',
-  Team: '/teams/:team',
+  Team: '/teams/:id',
+
+  // Fixtures
+  Fixtures: '/fixtures',
+  FixturesByGameweek: '/fixtures/gameweek/:gw',
+
+  // Gameweeks
+  Gameweeks: '/gameweeks',
+  CurrentGameweek: '/gameweeks/current',
 } as const;
 export type Route = (typeof Routes)[keyof typeof Routes];
 

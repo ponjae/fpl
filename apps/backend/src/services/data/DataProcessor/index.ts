@@ -7,37 +7,28 @@ import {
   PositionPlayerDict,
   TeamPlayerDict,
 } from '@fpl/contracts/fpl';
-import { ApplicationService } from '../app';
-import { FDRCalculator } from './FDRCalculator';
-import { PlayerEvaluator } from './PlayerEvaluator';
+import { ApplicationService } from '../../../app';
+import { FDRCalculator } from '../FDRCalculator';
+import { PlayerEvaluator } from '../PlayerEvaluator';
 
 export class DataProcessor extends ApplicationService {
-  /**
-   * Constructor.
-   *
-   * @param fdrCalculator - the FDR calculator.
-   * @param playerEvaluator - the player evaluator.
-   */
-  public constructor(
-    private readonly fdrCalculator: FDRCalculator,
-    private readonly playerEvaluator: PlayerEvaluator
-  ) {
-    super();
-  }
-
   /**
    * Processes a raw player and returns a processed player.
    *
    * @param rawPlayer - the raw player data.
    * @param fdrDict - the FDR dictionary.
    * @param nextGw - the next game week.
+   * @param fdrCalculator - the FDR calculator service.
+   * @param playerEvaluator - the player evaluator service.
    *
    * @returns the processed player.
    */
   public processPlayer(
     rawPlayer: RawPlayer,
     fdrDict: FDRDict,
-    nextGw: number
+    nextGw: number,
+    fdrCalculator: FDRCalculator,
+    playerEvaluator: PlayerEvaluator
   ): ProcessedPlayer {
     const {
       first_name,
@@ -67,31 +58,22 @@ export class DataProcessor extends ApplicationService {
     const pointsPerMillion = total_points / cost;
     const playerTeam = team;
 
-    const fdr1 = this.fdrCalculator.calculateTeamFDR(
-      playerTeam,
-      fdrDict,
-      nextGw,
-      1
-    );
-    const fdr5 = this.fdrCalculator.calculateTeamFDR(
-      playerTeam,
-      fdrDict,
-      nextGw,
-      5
-    );
+    const fdr1 = fdrCalculator.calculateTeamFDR(playerTeam, fdrDict, nextGw, 1);
+    const fdr5 = fdrCalculator.calculateTeamFDR(playerTeam, fdrDict, nextGw, 5);
     const fdrRemaining = this.calculateRemainingFDR(
       playerTeam,
       fdrDict,
-      nextGw
+      nextGw,
+      fdrCalculator
     );
 
-    const gamesNextGw = this.fdrCalculator.calculateRemainingGames(
+    const gamesNextGw = fdrCalculator.calculateRemainingGames(
       playerTeam,
       fdrDict,
       nextGw,
       1
     );
-    const gamesNextFive = this.fdrCalculator.calculateRemainingGames(
+    const gamesNextFive = fdrCalculator.calculateRemainingGames(
       playerTeam,
       fdrDict,
       nextGw,
@@ -100,7 +82,8 @@ export class DataProcessor extends ApplicationService {
     const totalGamesRemaining = this.calculateAllRemainingGames(
       playerTeam,
       fdrDict,
-      nextGw
+      nextGw,
+      fdrCalculator
     );
 
     const processedPlayer: ProcessedPlayer = {
@@ -149,7 +132,7 @@ export class DataProcessor extends ApplicationService {
 
     // Calculate player value using the evaluator
     processedPlayer.playerValue =
-      this.playerEvaluator.calculatePlayerValue(processedPlayer);
+      playerEvaluator.calculatePlayerValue(processedPlayer);
 
     return processedPlayer;
   }
@@ -249,17 +232,19 @@ export class DataProcessor extends ApplicationService {
    * @param teamId - the ID of the team.
    * @param fdrDict - a dictionary containing FDR values for each team by game week.
    * @param nextGw - the next game week number.
+   * @param fdrCalculator - the FDR calculator service.
    *
    * @returns the average FDR for the team over the remaining game weeks.
    */
   private calculateRemainingFDR(
     teamId: number,
     fdrDict: FDRDict,
-    nextGw: number
+    nextGw: number,
+    fdrCalculator: FDRCalculator
   ): number {
     const maxGw = Math.max(...Object.keys(fdrDict).map(Number));
     const remainingGws = maxGw - nextGw + 1;
-    return this.fdrCalculator.calculateTeamFDR(
+    return fdrCalculator.calculateTeamFDR(
       teamId,
       fdrDict,
       nextGw,
@@ -273,17 +258,19 @@ export class DataProcessor extends ApplicationService {
    * @param teamId - the ID of the team.
    * @param fdrDict - a dictionary containing FDR values for each team by game week.
    * @param nextGw - the next game week number.
+   * @param fdrCalculator - the FDR calculator service.
    *
    * @returns the total number of remaining games for the team over the remaining game weeks.
    */
   private calculateAllRemainingGames(
     teamId: number,
     fdrDict: FDRDict,
-    nextGw: number
+    nextGw: number,
+    fdrCalculator: FDRCalculator
   ): number {
     const maxGw = Math.max(...Object.keys(fdrDict).map(Number));
     const remainingGws = maxGw - nextGw + 1;
-    return this.fdrCalculator.calculateRemainingGames(
+    return fdrCalculator.calculateRemainingGames(
       teamId,
       fdrDict,
       nextGw,
