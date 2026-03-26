@@ -13,7 +13,7 @@ export default class Req<Body = any> {
   /**
    * Init the request object.
    *
-   * @param req the request object.
+   * @param req - the request object.
    */
   public _init(req: Request): void {
     this.req = req;
@@ -60,7 +60,7 @@ export default class Req<Body = any> {
   /**
    * Get the body of the request.
    *
-   * @param validateFn optional validation function.
+   * @param validateFn - optional validation function.
    *
    * @returns the body of the request.
    *
@@ -79,7 +79,7 @@ export default class Req<Body = any> {
   /**
    * Get a route param.
    *
-   * @param name the name of the param.
+   * @param name - the name of the param.
    * @param validateFn - optional validation function of the value.
    *
    * @returns the value of the param.
@@ -91,7 +91,10 @@ export default class Req<Body = any> {
     name: string,
     validateFn: (value: unknown) => value is T
   ): T;
-  getParamValue<T extends string>(name: string, validateFn?: (value: unknown) => value is T): T {
+  getParamValue<T extends string>(
+    name: string,
+    validateFn?: (value: unknown) => value is T
+  ): T {
     const value = this.req!.params[name];
 
     if (!validateFn || validateFn(value)) {
@@ -103,7 +106,7 @@ export default class Req<Body = any> {
   /**
    * Get a query param value.
    *
-   * @param name the name of the query param.
+   * @param name - the name of the query param.
    *
    * @returns the value of the query param.
    */
@@ -114,7 +117,7 @@ export default class Req<Body = any> {
   /**
    * Get a the header value.
    *
-   * @param name the name of the header.
+   * @param name - the name of the header.
    * @returns the header value(s).
    */
   public getHeaderValue(name: string): string | undefined {

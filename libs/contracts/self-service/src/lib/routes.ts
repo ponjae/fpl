@@ -22,10 +22,14 @@ export const Routes = {
   // Fixtures
   Fixtures: '/fixtures',
   FixturesByGameweek: '/fixtures/gameweek/:gw',
+  UpcomingFixturesByTeam: '/fixtures/team/:teamId/upcoming/:count',
 
   // Gameweeks
   Gameweeks: '/gameweeks',
   CurrentGameweek: '/gameweeks/current',
+
+  // Data
+  RefreshData: '/data/refresh',
 } as const;
 export type Route = (typeof Routes)[keyof typeof Routes];
 
