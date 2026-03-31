@@ -1,0 +1,25 @@
+@use '../../variables.scss' as *;
+
+.text {
+  color: $text-primary;
+
+  &.on-light {
+    color: $text-on-light;
+  }
+
+  &.secondary {
+    color: $text-secondary;
+  }
+
+  &.tertiary {
+    color: $text-tertiary;
+  }
+
+  &.error {
+    color: $error-red;
+  }
+
+  &.success {
+    color: $success-green;
+  }
+}

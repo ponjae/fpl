@@ -1,0 +1,43 @@
+// Layout
+$header-height: 5rem;
+
+// Primary Colors (Classic FPL Style)
+$primary-red: #be0606; // Main accent color
+$black: #010000; // Deep black
+$white: #ffffff; // Pure white
+$light-grey: #cecece; // Light grey
+$dark-grey: #8f8f8f; // Dark grey
+$off-grey: #e1e1e1; // Off-grey for backgrounds
+
+// Background Colors
+$background-dark: #010000; // Dark background
+$background-card: #1a1a1a; // Card/surface background
+$background-light: #e1e1e1; // Light grey background
+$background-hover: #2a2a2a; // Hover state
+
+// Text Colors
+$text-primary: #ffffff; // Primary text on dark
+$text-secondary: #cecece; // Secondary text
+$text-tertiary: #8f8f8f; // Tertiary text
+$text-on-light: #010000; // Text on light backgrounds
+
+// Functional Colors
+$success-green: #00ff87; // Positive indicators
+$warning-yellow: #ffd60a; // Warnings
+$error-red: #be0606; // Errors, negative indicators
+$info-blue: #0a84ff; // Info messages
+
+// Team/Position Colors
+$goalkeeper: #ffd700; // Gold for GK
+$defender: #0057b8; // Blue for defenders
+$midfielder: #00ff87; // Green for midfielders
+$forward: #e73725; // Red for forwards
+
+// UI Elements
+$border-color: #8f8f8f; // Default border
+$border-light: #cecece; // Light borders
+$shadow: rgba(0, 0, 0, 0.15); // Box shadows
+
+// Hover States
+$hover-red: #a00505; // Darker red for hover
+$hover-light: #ffe6e6; // Light red background on hover
