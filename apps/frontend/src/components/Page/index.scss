@@ -1,0 +1,43 @@
+@use '../../variables.scss' as *;
+
+.page-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  gap: 2rem;
+  overflow: auto;
+  background-color: $background-light;
+
+  .page-header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.8rem 0;
+    gap: 2rem;
+
+    .caption {
+      margin-top: 0.5rem;
+    }
+
+    > .header {
+      display: flex;
+      gap: 1rem;
+      padding-top: 1rem;
+    }
+  }
+
+  &.single-column {
+    width: 70%;
+    margin: auto;
+    padding: 3rem;
+  }
+
+  &.padded {
+    padding: 3rem;
+  }
+
+  &.no-scroll {
+    overflow: hidden;
+  }
+}
