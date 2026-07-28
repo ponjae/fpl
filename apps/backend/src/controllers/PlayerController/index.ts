@@ -1,4 +1,5 @@
 import {
+  GroupedPlayers,
   isPlayerSortKey,
   isSortDirection,
   PlayerSortKeys,
@@ -13,7 +14,7 @@ import { Method } from '@fpl/network';
 import { ApplicationController, Req, Res, toAppError } from '../../app';
 import { parseIntParam } from '../../app/params';
 import { FPLDataService } from '../../services/data';
-import { GroupedPlayers, PlayerService } from '../../services/PlayerService';
+import { PlayerService } from '../../services/PlayerService';
 import { TeamService } from '../../services/TeamService';
 
 export class PlayerController extends ApplicationController {

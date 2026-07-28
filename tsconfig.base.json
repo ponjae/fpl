@@ -17,18 +17,17 @@
     "lib": ["es2022", "dom"],
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
-    "baseUrl": ".",
     "paths": {
       "@fpl/contracts/self-service": [
-        "libs/contracts/self-service/src/index.ts"
+        "./libs/contracts/self-service/src/index.ts"
       ],
-      "@fpl/contracts/base": ["libs/contracts/base/src/index.ts"],
-      "@fpl/contracts/fpl": ["libs/contracts/fpl/src/index.ts"],
-      "@fpl/environment": ["libs/environment/src/index.ts"],
-      "@fpl/express-app": ["libs/express-app/src/index.ts"],
-      "@fpl/fpl-express": ["libs/fpl-express/src/index.ts"],
-      "@fpl/network": ["libs/network/src/index.ts"],
-      "@fpl/utils": ["libs/utils/src/index.ts"]
+      "@fpl/contracts/base": ["./libs/contracts/base/src/index.ts"],
+      "@fpl/contracts/fpl": ["./libs/contracts/fpl/src/index.ts"],
+      "@fpl/environment": ["./libs/environment/src/index.ts"],
+      "@fpl/express-app": ["./libs/express-app/src/index.ts"],
+      "@fpl/fpl-express": ["./libs/fpl-express/src/index.ts"],
+      "@fpl/network": ["./libs/network/src/index.ts"],
+      "@fpl/utils": ["./libs/utils/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

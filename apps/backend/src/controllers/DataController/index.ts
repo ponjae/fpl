@@ -1,14 +1,9 @@
+import { RefreshDataResponse } from '@fpl/contracts/fpl';
 import { Routes } from '@fpl/contracts/self-service';
 import { Decorators } from '@fpl/fpl-express';
 import { Method } from '@fpl/network';
 import { ApplicationController, Req, Res } from '../../app';
 import { FPLDataService } from '../../services/data/FPLDataService';
-
-/** Response body for POST /api/data/refresh */
-export type RefreshDataResponse = {
-  /** ISO-8601 timestamp of when the data was refreshed. */
-  refreshedAt: string;
-};
 
 export class DataController extends ApplicationController {
   /**

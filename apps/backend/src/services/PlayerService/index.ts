@@ -3,18 +3,9 @@ import {
   ProcessedPlayer,
   PlayerSortKey,
   SortDirection,
+  GroupedPlayers,
 } from '@fpl/contracts/fpl';
 import { ApplicationService } from '../../app';
-
-/**
- * Grouped players organized by team, position, and ID.
- */
-export type GroupedPlayers = {
-  byTeam: Record<string, ProcessedPlayer[]>;
-  byPosition: Record<string, ProcessedPlayer[]>;
-  byId: Record<number, ProcessedPlayer>;
-  lastUpdated: Date;
-};
 
 /**
  * Accessor map from PlayerSortKey to a function that extracts the numeric
