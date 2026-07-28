@@ -33,14 +33,18 @@ export class FDRCalculator extends ApplicationService {
   }
 
   /**
-   * Calculate the average FDR for a team over a given number of game weeks starting from a given game week.
+   * Calculate the sum of FDR values for a team over a given number of game weeks starting from a given game week.
+   *
+   * Returns the raw sum (not average) across all actual fixtures in the window.
+   * For example, a double gameweek contributes two difficulties to the sum.
+   * When there are no fixtures in the window, returns 0.
    *
    * @param teamId - the ID of the team to calculate the FDR for.
    * @param fdrDict - the FDR dictionary to use for the calculation.
    * @param startGw - the game week to start the calculation from.
    * @param gameWeeks - the number of game weeks to calculate the FDR for.
    *
-   * @returns - the average FDR for the team over the specified game weeks.
+   * @returns - the sum of FDR difficulties for the team over the specified game weeks.
    */
   public calculateTeamFDR(
     teamId: number,
@@ -49,15 +53,13 @@ export class FDRCalculator extends ApplicationService {
     gameWeeks: number
   ): number {
     let totalDifficulty = 0;
-    let totalGames = 0;
 
     for (let gw = startGw; gw < startGw + gameWeeks; gw++) {
       const teamDifficulties = fdrDict[gw]?.[teamId] ?? [];
       totalDifficulty += teamDifficulties.reduce((a, b) => a + b, 0);
-      totalGames += teamDifficulties.length;
     }
 
-    return totalGames > 0 ? totalDifficulty / totalGames : 0;
+    return totalDifficulty;
   }
 
   /**
@@ -78,7 +80,7 @@ export class FDRCalculator extends ApplicationService {
   ): number {
     let remainingGames = 0;
     const maxGw = gameWeeks
-      ? startGw + gameWeeks
+      ? startGw + gameWeeks - 1
       : Math.max(...Object.keys(fdrDict).map(Number));
 
     for (let gw = startGw; gw <= maxGw; gw++) {

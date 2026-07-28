@@ -194,11 +194,13 @@ export const isElementType = (t: unknown): t is ElementType =>
 export const isFixture = (f: unknown): f is Fixture =>
   isObject(f) &&
   isNumber(f.event) &&
+  isBoolean(f.finished) &&
+  isBoolean(f.finished_provisional) &&
   isNumber(f.id) &&
   isString(f.kickoff_time) &&
   isNumber(f.team_a) &&
-  isNumber(f.team_a_score) &&
+  (isNumber(f.team_a_score) || f.team_a_score === null) &&
   isNumber(f.team_h) &&
-  isNumber(f.team_h_score) &&
+  (isNumber(f.team_h_score) || f.team_h_score === null) &&
   isNumber(f.team_h_difficulty) &&
   isNumber(f.team_a_difficulty);

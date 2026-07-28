@@ -149,15 +149,22 @@ export type ElementType = {
 
 /**
  * The raw fixture data as received from the FPL API.
+ *
+ * `finished` is the authoritative "match is fully concluded" flag from the FPL API.
+ * `finished_provisional` becomes true slightly before `finished` (once scores are
+ * confirmed but live bonus points may still adjust), so we use `finished` to avoid
+ * mis-marking a match as done while bonus points are still being processed.
  */
 export type Fixture = {
   event: number;
+  finished: boolean;
+  finished_provisional: boolean;
   id: number;
   kickoff_time: string;
   team_a: number;
-  team_a_score: number;
+  team_a_score: number | null;
   team_h: number;
-  team_h_score: number;
+  team_h_score: number | null;
   team_h_difficulty: number;
   team_a_difficulty: number;
 };

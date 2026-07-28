@@ -7,15 +7,15 @@ import {
 } from '@fpl/utils';
 import { PlayerDict, ProcessedData, ProcessedPlayer } from '../types';
 import {
-  isPositionPlayerDict,
-  isTeamPlayerDict,
-  isProcessedPlayer,
-} from './player';
-import {
   isGameweekData,
   isFixturesByGameweek,
   isReadableFixture,
 } from './fixture';
+import {
+  isPositionPlayerDict,
+  isTeamPlayerDict,
+  isProcessedPlayer,
+} from './player';
 import { isTeamDataDict } from './team';
 
 const isProcessedPlayerDict = (

@@ -75,6 +75,15 @@
         ],
         "executor": "nx:noop"
       },
+      "lint": {
+        "executor": "@nx/eslint:lint"
+      },
+      "test": {
+        "executor": "@nx/vitest:test",
+        "outputs": [
+          "{workspaceRoot}/coverage/apps/backend"
+        ]
+      },
       "serve": {
         "continuous": true,
         "executor": "@nx/js:node",

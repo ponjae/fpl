@@ -4,6 +4,7 @@ import {
   isObjectOfType,
   isNumber,
   isArrayOfType,
+  isOptionallyDefined,
 } from '@fpl/utils';
 import {
   ProcessedPlayer,
@@ -75,15 +76,19 @@ export const isPlayerStats = (p: unknown): p is PlayerStats =>
 /**
  * Checks if the given value is a PlayerValue.
  *
+ * Fields value, value5, and value_remaining may be null when no fixtures
+ * are scheduled in the respective horizon. isOptionallyDefined treats null
+ * (and undefined) as absent, so null fields pass without additional checks.
+ *
  * @param p - The value to check.
  *
  * @returns true if p is a PlayerValue, false otherwise.
  */
 export const isPlayerValue = (p: unknown): p is PlayerValue =>
   isObject(p) &&
-  isNumber(p.value) &&
-  isNumber(p.value5) &&
-  isNumber(p.value_remaining);
+  isOptionallyDefined(p.value, isNumber) &&
+  isOptionallyDefined(p.value5, isNumber) &&
+  isOptionallyDefined(p.value_remaining, isNumber);
 
 /**
  * Checks if the array is an array of ProcessedPlayer.

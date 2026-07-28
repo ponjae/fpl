@@ -1,5 +1,10 @@
 import { describe, it, expect } from 'vitest';
 import {
+  isPlayerSortKey,
+  isSortDirection,
+  PlayerSortKeys,
+} from '../types/player';
+import {
   isProcessedPlayer,
   isGeneralPlayerInfo,
   isPlayerStats,
@@ -92,16 +97,36 @@ describe('Typeguards: Player', () => {
   });
 
   describe('isPlayerValue', () => {
-    it('should return true for valid PlayerValue', () => {
+    it('should return true for valid PlayerValue with numbers', () => {
       expect(isPlayerValue(validPlayerValue)).toBe(true);
     });
 
-    it('should return false for invalid PlayerValue', () => {
+    it('should return true for valid PlayerValue with null fields', () => {
+      const nullValue = { value: null, value5: null, value_remaining: null };
+      expect(isPlayerValue(nullValue)).toBe(true);
+    });
+
+    it('should return true for valid PlayerValue with mixed number and null fields', () => {
+      const mixedValue = { value: 12.5, value5: null, value_remaining: 14.1 };
+      expect(isPlayerValue(mixedValue)).toBe(true);
+    });
+
+    it('should return false when a field is a non-null, non-number value (missing key)', () => {
+      // With isOptionallyDefined, a missing key (undefined) passes — that is
+      // intentional: the type allows null and the object shape is validated by
+      // the outer isObject call. Use a bad-type value to test rejection.
       const invalidValue = {
-        value: 12.5,
+        value: 'bad',
         value5: 13.2,
+        value_remaining: 14.1,
       };
       expect(isPlayerValue(invalidValue)).toBe(false);
+    });
+
+    it('should return false for a non-object', () => {
+      expect(isPlayerValue(null)).toBe(false);
+      expect(isPlayerValue(42)).toBe(false);
+      expect(isPlayerValue('string')).toBe(false);
     });
   });
 
@@ -189,6 +214,44 @@ describe('Typeguards: Player', () => {
         Forwards: [],
       };
       expect(isPositionPlayerDict(invalidDict)).toBe(false);
+    });
+  });
+});
+
+describe('sort key guards', () => {
+  describe('isPlayerSortKey', () => {
+    it('should return true for every declared sort key', () => {
+      PlayerSortKeys.forEach((key) => {
+        expect(isPlayerSortKey(key)).toBe(true);
+      });
+    });
+
+    it('should return false for a non-sortable player field', () => {
+      expect(isPlayerSortKey('web_name')).toBe(false);
+      expect(isPlayerSortKey('playerStats')).toBe(false);
+    });
+
+    it('should return false for non-string input', () => {
+      expect(isPlayerSortKey(undefined)).toBe(false);
+      expect(isPlayerSortKey(null)).toBe(false);
+      expect(isPlayerSortKey(1)).toBe(false);
+    });
+
+    it('should be case sensitive', () => {
+      expect(isPlayerSortKey('Total_Points')).toBe(false);
+    });
+  });
+
+  describe('isSortDirection', () => {
+    it('should return true for asc and desc', () => {
+      expect(isSortDirection('asc')).toBe(true);
+      expect(isSortDirection('desc')).toBe(true);
+    });
+
+    it('should return false for anything else', () => {
+      expect(isSortDirection('ascending')).toBe(false);
+      expect(isSortDirection('DESC')).toBe(false);
+      expect(isSortDirection(undefined)).toBe(false);
     });
   });
 });

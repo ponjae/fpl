@@ -1,5 +1,5 @@
-import { isBoolean } from './typeguards';
 import { asyncForEach, asyncify, awaiter, wait } from './async';
+import { isBoolean } from './typeguards';
 
 const syncFn = () => Math.random() > 0.2;
 const asyncFn = async () => syncFn();

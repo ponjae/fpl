@@ -3,12 +3,11 @@ import { Routes } from '@fpl/contracts/self-service';
 import { Decorators } from '@fpl/fpl-express';
 import { Method } from '@fpl/network';
 import { ApplicationController, Req, Res } from '../../app';
+import { parseIntParam } from '../../app/params';
 import { FPLDataService } from '../../services/data/FPLDataService';
 import { FixtureService } from '../../services/FixtureService';
 
 export class FixtureController extends ApplicationController {
-  @Decorators.Route(Method.Get, Routes.Fixtures)
-
   /**
    * Get all fixtures across all gameweeks.
    *
@@ -31,6 +30,8 @@ export class FixtureController extends ApplicationController {
   /**
    * Get fixtures for a specific gameweek.
    *
+   * Non-numeric `:gw` → 400.
+   *
    * @param req - the request object.
    * @param res - the response object.
    */
@@ -40,22 +41,21 @@ export class FixtureController extends ApplicationController {
     res: Res<FixtureEntry[]>
   ): Promise<void> {
     const context = this.getContext();
-    const gameWeek = req.getParamValue('gw');
+    const gameWeek = parseIntParam(req.getParamValue('gw'), 'gw');
 
     const dataService = context.getService(FPLDataService, req);
     const data = await dataService.getData();
 
     const fixtureService = context.getService(FixtureService, req);
-    const fixtures = fixtureService.getFixturesByGameweek(
-      data,
-      Number(gameWeek)
-    );
+    const fixtures = fixtureService.getFixturesByGameweek(data, gameWeek);
 
     res.send(fixtures);
   }
 
   /**
    * Get upcoming fixtures for a team.
+   *
+   * Non-numeric `:teamId` or `:count` → 400.
    *
    * @param req - the request object.
    * @param res - the response object.
@@ -66,18 +66,14 @@ export class FixtureController extends ApplicationController {
     res: Res<FixtureEntry[]>
   ): Promise<void> {
     const context = this.getContext();
-    const teamId = req.getParamValue('teamId');
-    const count = req.getParamValue('count');
+    const teamId = parseIntParam(req.getParamValue('teamId'), 'teamId');
+    const count = parseIntParam(req.getParamValue('count'), 'count');
 
     const dataService = context.getService(FPLDataService, req);
     const data = await dataService.getData();
 
     const fixtureService = context.getService(FixtureService, req);
-    const fixtures = fixtureService.getUpcomingFixtures(
-      data,
-      Number(teamId),
-      Number(count)
-    );
+    const fixtures = fixtureService.getUpcomingFixtures(data, teamId, count);
 
     res.send(fixtures);
   }

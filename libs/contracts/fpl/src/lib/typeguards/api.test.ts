@@ -12,6 +12,8 @@ import {
 
 const validFixture = {
   event: 1,
+  finished: true,
+  finished_provisional: true,
   id: 1,
   kickoff_time: '2025-08-15T17:30:00Z',
   team_a: 2,

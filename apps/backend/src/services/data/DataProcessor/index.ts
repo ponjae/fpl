@@ -17,7 +17,8 @@ export class DataProcessor extends ApplicationService {
    *
    * @param rawPlayer - the raw player data.
    * @param fdrDict - the FDR dictionary.
-   * @param nextGw - the next game week.
+   * @param nextGw - the next game week (= current gameweek, first unfinished event).
+   * @param gameweeksLapsed - gameweeks actually played so far this season.
    * @param fdrCalculator - the FDR calculator service.
    * @param playerEvaluator - the player evaluator service.
    *
@@ -27,6 +28,7 @@ export class DataProcessor extends ApplicationService {
     rawPlayer: RawPlayer,
     fdrDict: FDRDict,
     nextGw: number,
+    gameweeksLapsed: number,
     fdrCalculator: FDRCalculator,
     playerEvaluator: PlayerEvaluator
   ): ProcessedPlayer {
@@ -119,9 +121,9 @@ export class DataProcessor extends ApplicationService {
         transfers_out,
       },
       playerValue: {
-        value: 0,
-        value5: 0,
-        value_remaining: 0,
+        value: null,
+        value5: null,
+        value_remaining: null,
       },
       games: {
         games_next_gw: gamesNextGw,
@@ -131,8 +133,10 @@ export class DataProcessor extends ApplicationService {
     };
 
     // Calculate player value using the evaluator
-    processedPlayer.playerValue =
-      playerEvaluator.calculatePlayerValue(processedPlayer);
+    processedPlayer.playerValue = playerEvaluator.calculatePlayerValue(
+      processedPlayer,
+      gameweeksLapsed
+    );
 
     return processedPlayer;
   }
@@ -227,14 +231,14 @@ export class DataProcessor extends ApplicationService {
   }
 
   /**
-   * Calculate the average FDR for a team over all remaining game weeks starting from the next game week.
+   * Calculate the sum of FDR values for a team over all remaining game weeks starting from the next game week.
    *
    * @param teamId - the ID of the team.
    * @param fdrDict - a dictionary containing FDR values for each team by game week.
    * @param nextGw - the next game week number.
    * @param fdrCalculator - the FDR calculator service.
    *
-   * @returns the average FDR for the team over the remaining game weeks.
+   * @returns the sum of FDR difficulties for the team over the remaining game weeks.
    */
   private calculateRemainingFDR(
     teamId: number,
