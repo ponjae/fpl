@@ -1,15 +1,18 @@
+import React from 'react';
+import Footer from '../Footer';
 import Header from '../Header';
 import './index.scss';
 
 export type PageLayoutProps = {
-  children: React.ReactElement | React.ReactElement[];
+  children: React.ReactNode | React.ReactNode[];
 };
 
 const PageLayout: React.FC<PageLayoutProps> = ({ children }) => (
-  <>
+  <div className="page-layout-container">
     <Header />
-    <div className="page-layout">{children}</div>
-  </>
+    <main className="main-content">{children}</main>
+    <Footer />
+  </div>
 );
 
 export default PageLayout;

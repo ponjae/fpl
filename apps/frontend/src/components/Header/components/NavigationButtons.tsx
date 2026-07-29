@@ -1,33 +1,41 @@
-// import { useNavigate } from '../../../routes';
-// import { Routes, Route } from '../../../routes/types';
+import { useLocation } from 'react-router-dom';
+import { Routes, Route } from '../../../routes/types';
 import Button from '../../Button';
+import HyperLink from '../../HyperLink';
 import Text from '../../Text';
 
 type NavigationButtonsProps = {
   onTeamButtonClick: () => void;
 };
 
-export const NAVIGATION_BUTTONS = [] as const;
+export type NavigationItem = {
+  label: string;
+  route: Route;
+};
+
+export const NAVIGATION_BUTTONS: NavigationItem[] = [
+  { label: 'Ranking', route: Routes.Ranking },
+  { label: 'Best Team', route: Routes.BestTeam },
+  { label: 'About', route: Routes.About },
+];
 
 export const NavigationButtons = ({
   onTeamButtonClick,
 }: NavigationButtonsProps) => {
-  // const { navigate } = useNavigate();
-  //
-  // const handleNavigation = (route: Route) => {
-  //   return (event: React.MouseEvent) => {
-  //     event.preventDefault();
-  //     navigate(route);
-  //   };
-  // };
+  const location = useLocation();
 
   return (
-    <div>
-      {NAVIGATION_BUTTONS.map(() => (
-        <Button>
-          <Text>Hej</Text>
-        </Button>
-      ))}
+    <div className="navigation-buttons">
+      {NAVIGATION_BUTTONS.map((item) => {
+        const isActive = location.pathname === item.route;
+        return (
+          <HyperLink key={item.route} route={item.route} subtle>
+            <Button className={isActive ? 'active' : ''}>
+              <Text className="nav-text">{item.label}</Text>
+            </Button>
+          </HyperLink>
+        );
+      })}
     </div>
   );
 };
