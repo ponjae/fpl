@@ -1,7 +1,9 @@
 @use '../../variables.scss' as *;
 
 .text {
+  font-family: $font-body;
   color: $text-primary;
+  margin: 0;
 
   &.on-light {
     color: $text-on-light;
@@ -22,4 +24,12 @@
   &.success {
     color: $success-green;
   }
+}
+
+// If headings are rendered inside a Text component, ensure they use the display font and negative tracking
+h1.text, h2.text, h3.text, h4.text, h5.text, h6.text {
+  font-family: $font-display;
+  letter-spacing: -0.03em;
+  font-weight: 700;
+  color: $white;
 }

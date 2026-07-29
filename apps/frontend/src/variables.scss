@@ -1,44 +1,74 @@
-// Layout
-$header-height: 5rem;
-$footer-height: 5rem;
+// ==========================================
+// DESIGN TOKENS (2026 Sports Analytics Theme)
+// ==========================================
 
-// Primary Colors (Classic FPL Style)
-$primary-red: #be0606; // Main accent color
-$black: #010000; // Deep black
-$white: #ffffff; // Pure white
-$light-grey: #cecece; // Light grey
-$dark-grey: #8f8f8f; // Dark grey
-$off-grey: #e1e1e1; // Off-grey for backgrounds
+// Typography Settings
+$font-body: 'Geist', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+$font-display: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+
+// Spacing & Layout
+$header-height: 4.5rem;
+$footer-height: 5rem;
+$spacing-xs: 0.25rem;
+$spacing-sm: 0.5rem;
+$spacing-md: 1rem;
+$spacing-lg: 1.5rem;
+$spacing-xl: 2rem;
+$spacing-xxl: 3rem;
+
+// Border Radius
+$radius-sm: 4px;
+$radius-md: 8px;
+$radius-lg: 12px;
+$radius-xl: 16px;
+$radius-full: 9999px;
+
+// Shadows & Elevation
+$shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+$shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -2px rgba(0, 0, 0, 0.4);
+$shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -4px rgba(0, 0, 0, 0.5);
+$shadow-inner: inset 0 2px 4px 0 rgba(0, 0, 0, 0.4);
+$glow-accent: 0 0 15px rgba(139, 92, 246, 0.15);
+$glow-mint: 0 0 15px rgba(0, 255, 135, 0.2);
+
+// Core Theme Neutrals (Deep Pitch Slate)
+$black: #080c14;             // Deep dark background base (Rich dark slate)
+$white: #f8fafc;             // Off-white for high readability
+$light-grey: #94a3b8;        // Muted grey for borders/text (Slate 400)
+$dark-grey: #475569;         // Darker grey for borders/dividers (Slate 600)
+$off-grey: #0f172a;          // Elevate card background (Slate 900)
 
 // Background Colors
-$background-dark: #010000; // Dark background
-$background-card: #1a1a1a; // Card/surface background
-$background-light: #e1e1e1; // Light grey background
-$background-hover: #2a2a2a; // Hover state
+$background-dark: #080c14;   // Primary page background
+$background-card: #0f172a;   // Surface background for cards
+$background-light: #1e293b;  // Surface background for lighter panels (Slate 800)
+$background-hover: #1e293b;  // Hover states (Slate 800)
 
 // Text Colors
-$text-primary: #ffffff; // Primary text on dark
-$text-secondary: #cecece; // Secondary text
-$text-tertiary: #8f8f8f; // Tertiary text
-$text-on-light: #010000; // Text on light backgrounds
+$text-primary: #f8fafc;      // Primary body text (Slate 50)
+$text-secondary: #cbd5e1;    // Secondary readable text (Slate 300)
+$text-tertiary: #64748b;     // Muted labels & captions (Slate 500)
+$text-on-light: #0f172a;     // High contrast text on bright elements
+
+// Primary Accent & Brand
+$brand-purple: #8b5cf6;      // Contemporary Cyber Purple Accent
+$primary-red: $brand-purple; // Map legacy variable to our premium purple
+$hover-red: #7c3aed;         // Darker purple hover state
 
 // Functional Colors
-$success-green: #00ff87; // Positive indicators
-$warning-yellow: #ffd60a; // Warnings
-$error-red: #be0606; // Errors, negative indicators
-$info-blue: #0a84ff; // Info messages
+$success-green: #00ff87;     // Iconic Premier League Neon Green
+$warning-yellow: #facc15;    // Warm warnings (Amber 400)
+$error-red: #ef4444;         // Clean error red
+$info-blue: #38bdf8;         // Cyber sky-blue
 
 // Team/Position Colors
-$goalkeeper: #ffd700; // Gold for GK
-$defender: #0057b8; // Blue for defenders
-$midfielder: #00ff87; // Green for midfielders
-$forward: #e73725; // Red for forwards
+$goalkeeper: #fbbf24;        // Amber GK
+$defender: #3b82f6;          // Blue DF
+$midfielder: #00ff87;        // Neon green MID
+$forward: #f43f5e;           // Rose/coral FWD
 
 // UI Elements
-$border-color: #8f8f8f; // Default border
-$border-light: #cecece; // Light borders
-$shadow: rgba(0, 0, 0, 0.15); // Box shadows
-
-// Hover States
-$hover-red: #a00505; // Darker red for hover
-$hover-light: #ffe6e6; // Light red background on hover
+$border-color: #1e293b;      // Default low-contrast border (Slate 800)
+$border-light: #334155;      // Subtle lighter borders (Slate 700)
+$shadow: rgba(0, 0, 0, 0.3); // Base shadow color
+$hover-light: #2e1065;       // Purple-tinted dark background hover

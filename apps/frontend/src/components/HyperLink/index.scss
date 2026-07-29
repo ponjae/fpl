@@ -1,9 +1,29 @@
+@use '../../variables.scss' as *;
+
 .hyperlink {
+  color: $brand-purple;
+  text-decoration: none;
+  transition: color 0.15s ease-in-out;
+  cursor: pointer;
+
+  &:hover {
+    color: $hover-red;
+    text-decoration: underline;
+  }
+
+  &:focus-visible {
+    outline: 2px solid $brand-purple;
+    outline-offset: 2px;
+    border-radius: $radius-sm;
+  }
+
   &.no-decoration {
     text-decoration: none !important;
+    color: inherit;
 
     &:hover {
       text-decoration: none !important;
+      color: inherit;
     }
   }
 }

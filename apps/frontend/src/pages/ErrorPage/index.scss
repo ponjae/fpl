@@ -6,31 +6,42 @@
   align-items: center;
   justify-content: center;
   text-align: center;
-  padding: 4rem 2rem;
+  padding: 6rem 2rem;
   flex: 1;
+  background-color: $background-dark;
 
   .error-title {
-    font-size: 2.5rem;
+    font-family: $font-display;
+    font-size: 3rem;
     font-weight: 800;
     margin-bottom: 1rem;
-    color: $primary-red;
+    background: linear-gradient(135deg, $error-red 0%, #ff7b7b 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
   }
 
   .error-message {
+    font-family: $font-body;
     font-size: 1.1rem;
     margin-bottom: 2rem;
-    color: $text-on-light;
+    color: $text-secondary;
+    max-width: 500px;
+    line-height: 1.6;
   }
 
   .home-link {
+    font-family: $font-body;
     font-weight: 600;
-    color: $primary-red;
-    text-decoration: underline;
+    color: $brand-purple;
+    text-decoration: none;
     font-size: 1rem;
-    transition: color 0.2s ease;
+    transition: all 0.2s ease;
+    border-bottom: 2px solid transparent;
+    padding-bottom: 2px;
 
     &:hover {
-      color: $hover-red;
+      color: $success-green;
+      border-bottom-color: $success-green;
     }
   }
 }
