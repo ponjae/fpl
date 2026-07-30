@@ -1,7 +1,263 @@
 @use '../../variables.scss' as *;
 
 .home-page {
-  padding: 2rem;
+  padding: 1.5rem;
   width: 100%;
   box-sizing: border-box;
+
+  @media (min-width: 768px) {
+    padding: 2.5rem 2rem;
+  }
+
+  &__container {
+    width: 100%;
+    max-width: 1440px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-xl;
+  }
+
+  &__header {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: $spacing-md;
+
+    @media (min-width: 768px) {
+      flex-direction: row;
+      align-items: center;
+    }
+  }
+
+  &__titles {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-xs;
+  }
+
+  &__title {
+    font-family: $font-display;
+    font-weight: 800;
+    font-size: 2rem;
+    color: $white;
+    letter-spacing: -0.03em;
+    margin: 0;
+
+    @media (min-width: 768px) {
+      font-size: 2.5rem;
+    }
+  }
+
+  &__subtitle {
+    font-family: $font-body;
+    font-size: 0.95rem;
+    color: $text-secondary;
+    margin: 0;
+  }
+
+  &__last-updated {
+    font-family: $font-body;
+    font-size: 0.8rem;
+    color: $text-tertiary;
+    background-color: rgba($white, 0.02);
+    border: 1px solid rgba($white, 0.05);
+    padding: 0.4rem 0.8rem;
+    border-radius: $radius-full;
+    white-space: nowrap;
+    font-weight: 500;
+  }
+}
+
+// Gameweek Summary Grid
+.gameweek-summary-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: $spacing-md;
+  width: 100%;
+
+  @media (min-width: 480px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (min-width: 900px) {
+    grid-template-columns: repeat(5, 1fr);
+  }
+}
+
+// Side-by-Side and Nested layouts
+.home-page-content-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: $spacing-xl;
+  width: 100%;
+
+  @media (min-width: 1200px) {
+    grid-template-columns: 1fr 1.25fr;
+  }
+}
+
+.home-page-column {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+// Top Value Picks Columns
+.top-picks-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: $spacing-lg;
+  width: 100%;
+
+  @media (min-width: 640px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.top-picks-column {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-md;
+  background-color: rgba($white, 0.01);
+  border: 1px solid rgba($white, 0.03);
+  border-radius: $radius-lg;
+  padding: $spacing-md;
+  box-sizing: border-box;
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba($white, 0.05);
+    padding-bottom: $spacing-sm;
+  }
+
+  &__title {
+    font-family: $font-display;
+    font-weight: 700;
+    font-size: 1rem;
+    color: $white;
+    letter-spacing: -0.01em;
+    margin: 0;
+  }
+}
+
+.top-picks-explore-link {
+  font-family: $font-body;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: $brand-purple;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  transition: color 0.2s ease;
+
+  &:hover {
+    color: $hover-red;
+  }
+}
+
+.top-picks-list {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-xs;
+}
+
+// Top Pick Row Card
+.top-pick-card {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: $spacing-sm;
+  padding: 0.6rem;
+  background-color: rgba($white, 0.02);
+  border: 1px solid rgba($white, 0.03);
+  border-radius: $radius-sm;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+
+  &:hover {
+    background-color: rgba($white, 0.04);
+    border-color: rgba($brand-purple, 0.15);
+  }
+
+  &__rank {
+    font-family: $font-display;
+    font-weight: 700;
+    font-size: 0.85rem;
+    color: $text-tertiary;
+    min-width: 1.25rem;
+    text-align: center;
+  }
+
+  &__info {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  &__name {
+    font-family: $font-body;
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: $text-primary;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: inline-block;
+    max-width: 100%;
+
+    &:hover {
+      color: $brand-purple;
+    }
+  }
+
+  &__meta {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    min-width: 0;
+  }
+
+  &__team {
+    font-family: $font-body;
+    font-size: 0.7rem;
+    color: $text-tertiary;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &__separator {
+    color: rgba($white, 0.1);
+    font-size: 0.7rem;
+  }
+
+  &__pos {
+    font-family: $font-body;
+    font-size: 0.7rem;
+    color: $text-tertiary;
+    font-weight: 600;
+  }
+
+  &__stats {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    font-variant-numeric: tabular-nums;
+  }
+
+  &__price {
+    font-family: $font-body;
+    font-size: 0.75rem;
+    color: $text-secondary;
+    font-weight: 500;
+  }
+
+  &__value {
+    font-family: $font-display;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: $success-green;
+  }
 }

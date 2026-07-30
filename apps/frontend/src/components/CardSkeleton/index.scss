@@ -1,0 +1,111 @@
+@use '../../variables.scss' as *;
+
+.card-skeleton-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.card-skeleton {
+  background-color: $background-card;
+  border: 1px solid rgba($white, 0.08);
+  border-radius: $radius-xl;
+  padding: 1.5rem;
+  box-shadow: $shadow-sm;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  box-sizing: border-box;
+
+  &__header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  &__badge-shimmer {
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: $radius-full;
+    background: rgba($white, 0.05);
+    flex-shrink: 0;
+  }
+
+  &__title-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    flex-grow: 1;
+  }
+
+  &__title-shimmer {
+    width: 60%;
+    height: 0.9rem;
+    border-radius: $radius-sm;
+    background: linear-gradient(90deg, rgba($white, 0.04) 25%, rgba($white, 0.1) 50%, rgba($white, 0.04) 75%);
+    background-size: 200% 100%;
+    animation: card-shimmer 1.5s infinite;
+
+    @media (prefers-reduced-motion: reduce) {
+      animation: none;
+      background: rgba($white, 0.06);
+    }
+  }
+
+  &__subtitle-shimmer {
+    width: 40%;
+    height: 0.7rem;
+    border-radius: $radius-sm;
+    background: rgba($white, 0.04);
+  }
+
+  &__body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  &__line-shimmer {
+    width: 100%;
+    height: 0.8rem;
+    border-radius: $radius-sm;
+    background: linear-gradient(90deg, rgba($white, 0.03) 25%, rgba($white, 0.08) 50%, rgba($white, 0.03) 75%);
+    background-size: 200% 100%;
+    animation: card-shimmer 1.5s infinite;
+
+    @media (prefers-reduced-motion: reduce) {
+      animation: none;
+      background: rgba($white, 0.05);
+    }
+
+    &.short {
+      width: 70%;
+    }
+  }
+
+  &__footer {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: auto;
+    padding-top: 0.5rem;
+    border-top: 1px solid rgba($white, 0.04);
+  }
+
+  &__action-shimmer {
+    width: 30%;
+    height: 1.5rem;
+    border-radius: $radius-md;
+    background: rgba($white, 0.04);
+  }
+}
+
+@keyframes card-shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}

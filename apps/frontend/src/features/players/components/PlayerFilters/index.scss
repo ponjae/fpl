@@ -1,0 +1,174 @@
+@use '../../../../variables.scss' as *;
+
+.player-filters {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 100%;
+  background-color: rgba($white, 0.02);
+  border: 1px solid rgba($white, 0.06);
+  border-radius: $radius-xl;
+  padding: 1rem;
+  box-sizing: border-box;
+  margin-bottom: 2rem;
+
+  @media (min-width: 1024px) {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  &__main {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    width: 100%;
+
+    @media (min-width: 640px) {
+      flex-direction: row;
+      align-items: center;
+    }
+
+    @media (min-width: 1024px) {
+      max-width: 65%;
+    }
+  }
+
+  &__field {
+    width: 100%;
+
+    @media (min-width: 640px) {
+      width: 12rem;
+    }
+
+    &--search {
+      @media (min-width: 640px) {
+        flex-grow: 1;
+        width: auto;
+      }
+    }
+  }
+
+  &__search-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+  }
+
+  &__search-icon {
+    position: absolute;
+    left: 1rem;
+    color: $text-tertiary;
+    pointer-events: none;
+  }
+
+  &__input {
+    width: 100%;
+    height: 2.5rem;
+    background-color: rgba($black, 0.3);
+    border: 1px solid rgba($white, 0.08);
+    border-radius: $radius-md;
+    padding: 0 1rem 0 2.75rem;
+    font-family: $font-body;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: $white;
+    outline: none;
+    box-shadow: $shadow-inner;
+    box-sizing: border-box;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+
+    &::placeholder {
+      color: $text-tertiary;
+    }
+
+    &:hover {
+      border-color: rgba($white, 0.15);
+    }
+
+    &:focus {
+      border-color: $brand-purple;
+      box-shadow: 0 0 0 2px rgba($brand-purple, 0.1);
+    }
+  }
+
+  &__select {
+    width: 100%;
+    height: 2.5rem;
+    background-color: rgba($black, 0.3);
+    border: 1px solid rgba($white, 0.08);
+    border-radius: $radius-md;
+    padding: 0 1rem;
+    font-family: $font-body;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: $text-secondary;
+    outline: none;
+    box-shadow: $shadow-inner;
+    box-sizing: border-box;
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2364748b' stroke-width='2.5'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M19.5 8.25l-7.5 7.5-7.5-7.5' /%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    background-size: 0.85rem;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+
+    &:hover {
+      border-color: rgba($white, 0.15);
+      color: $white;
+    }
+
+    &:focus {
+      border-color: $brand-purple;
+    }
+
+    option {
+      background-color: $background-card;
+      color: $white;
+    }
+  }
+
+  &__aside {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    justify-content: space-between;
+    width: 100%;
+
+    @media (min-width: 640px) {
+      justify-content: flex-end;
+    }
+
+    @media (min-width: 1024px) {
+      width: auto;
+    }
+  }
+
+  &__clear-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem !important;
+    height: 2.3rem !important;
+    padding: 0 0.85rem !important;
+    color: $text-secondary !important;
+    font-family: $font-display !important;
+    font-size: 0.82rem !important;
+    font-weight: 700 !important;
+
+    svg {
+      color: $text-tertiary;
+      transition: color 0.15s ease;
+    }
+
+    &:hover {
+      color: $white !important;
+      background-color: rgba($white, 0.05) !important;
+      
+      svg {
+        color: $white;
+      }
+    }
+  }
+}

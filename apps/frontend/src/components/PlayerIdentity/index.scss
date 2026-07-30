@@ -1,0 +1,107 @@
+@use '../../variables.scss' as *;
+
+.player-identity {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  box-sizing: border-box;
+  text-align: left;
+
+  &--compact {
+    gap: 0.5rem;
+    
+    .player-identity__details {
+      flex-direction: row;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .player-identity__name {
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+
+    .player-identity__meta {
+      margin-top: 0;
+    }
+  }
+
+  &__team {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  &__details {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-width: 0; // prevent text overflow
+  }
+
+  &__name-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-width: 0;
+  }
+
+  &__name {
+    font-family: $font-body;
+    font-size: 1rem;
+    font-weight: 700;
+    color: $white;
+    line-height: 1.2;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  &__status {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.1rem 0.4rem;
+    border-radius: $radius-sm;
+    font-family: $font-display;
+    font-size: 0.6rem;
+    font-weight: 800;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    line-height: 1;
+    white-space: nowrap;
+    border-width: 1px;
+    border-style: solid;
+
+    &--danger {
+      background-color: rgba($error-red, 0.1);
+      border-color: rgba($error-red, 0.3);
+      color: $error-red;
+    }
+
+    &--warning {
+      background-color: rgba($warning-yellow, 0.1);
+      border-color: rgba($warning-yellow, 0.3);
+      color: $warning-yellow;
+    }
+  }
+
+  &__meta {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 0.15rem;
+  }
+
+  &__team-label {
+    font-family: $font-body;
+    font-size: 0.75rem;
+    color: $text-tertiary;
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 6.5rem;
+  }
+}

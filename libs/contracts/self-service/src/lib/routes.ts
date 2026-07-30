@@ -23,8 +23,10 @@ export const Routes = {
   PlayersByPosition: '/players/position/:position',
   Player: '/players/:id',
 
-  // Teams
+  // Teams — order matters in Express: register '/teams/names' before
+  // '/teams/:id' so the literal segment is not swallowed by :id.
   Teams: '/teams',
+  TeamNames: '/teams/names',
   Team: '/teams/:id',
 
   // Fixtures

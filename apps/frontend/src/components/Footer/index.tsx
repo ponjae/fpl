@@ -11,8 +11,11 @@ export type FooterLink = {
 
 export const FOOTER_LINKS: FooterLink[] = [
   { label: 'Home', route: Routes.Home },
-  { label: 'Ranking', route: Routes.Ranking },
-  { label: 'Best Team', route: Routes.BestTeam },
+  { label: 'Players', route: Routes.Players },
+  { label: 'Optimizer', route: Routes.Optimizer },
+  { label: 'My Squad', route: Routes.MySquad },
+  { label: 'Teams', route: Routes.Teams },
+  { label: 'Fixtures', route: Routes.Fixtures },
   { label: 'About', route: Routes.About },
 ];
 

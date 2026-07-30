@@ -30,9 +30,12 @@ export type GameweekDataEntry = {
   id: number;
   average_entry_score: number;
   finished: boolean;
-  highest_score: number;
-  top_element_info: TopElementInfo;
-  most_captained: number;
+  /** Null before the gameweek has been played. */
+  highest_score: number | null;
+  /** Null before the gameweek has been played. */
+  top_element_info: TopElementInfo | null;
+  /** Player id. Null before the gameweek has been played. */
+  most_captained: number | null;
   chip_plays: ChipPlay[];
 };
 
@@ -51,6 +54,8 @@ export type FixtureEntry = {
   home_score?: number;
   away_score?: number;
   gw: number;
+  /** Null for unscheduled or postponed fixtures. */
+  kickoff_time: string | null;
 };
 
 /**
@@ -68,6 +73,8 @@ export type ReadableFixtureEntry = {
   home_score?: number;
   away_score?: number;
   gw: number;
+  /** Null for unscheduled or postponed fixtures. */
+  kickoff_time: string | null;
 };
 
 /**

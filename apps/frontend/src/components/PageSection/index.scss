@@ -1,0 +1,64 @@
+@use '../../variables.scss' as *;
+
+.page-section {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin-bottom: 2.5rem;
+  box-sizing: border-box;
+
+  &__header {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1.5rem;
+    width: 100%;
+
+    @media (min-width: 640px) {
+      flex-direction: row;
+      align-items: center;
+    }
+  }
+
+  &__titles {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  &__title {
+    font-family: $font-display;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: $white;
+    margin: 0;
+    letter-spacing: -0.01em;
+    line-height: 1.2;
+  }
+
+  &__subtitle {
+    font-family: $font-body;
+    font-size: 0.9rem;
+    color: $text-secondary;
+    margin: 0;
+    line-height: 1.4;
+  }
+
+  &__actions {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    align-self: stretch;
+
+    @media (min-width: 640px) {
+      align-self: auto;
+    }
+  }
+
+  &__content {
+    width: 100%;
+  }
+}

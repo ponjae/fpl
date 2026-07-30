@@ -1,0 +1,157 @@
+@use '../../variables.scss' as *;
+
+.fixture-list {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-sm;
+  width: 100%;
+  box-sizing: border-box;
+
+  &--compact {
+    gap: $spacing-xs;
+
+    .fixture-row {
+      padding: 0.5rem $spacing-md;
+      min-height: 2.75rem;
+    }
+
+    .fixture-team-name {
+      font-size: 0.85rem;
+    }
+
+    .fixture-score,
+    .fixture-vs {
+      font-size: 0.85rem;
+      padding: 0.2rem 0.5rem;
+    }
+  }
+}
+
+.fixture-row {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: $spacing-md;
+  padding: 0.75rem $spacing-lg;
+  background-color: rgba($white, 0.02);
+  border: 1px solid rgba($white, 0.04);
+  border-radius: $radius-md;
+  transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+  min-height: 3.5rem;
+  box-sizing: border-box;
+
+  &:hover {
+    background-color: rgba($white, 0.04);
+    border-color: rgba($brand-purple, 0.2);
+    transform: translateY(-1px);
+  }
+
+  @media (max-width: 500px) {
+    gap: $spacing-sm;
+    padding: 0.6rem $spacing-sm;
+  }
+}
+
+.fixture-team {
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  white-space: nowrap;
+
+  &--home {
+    justify-content: flex-end;
+    text-align: right;
+
+    .fixture-team-name {
+      margin-right: $spacing-sm;
+    }
+  }
+
+  &--away {
+    justify-content: flex-start;
+    text-align: left;
+
+    .fixture-team-name {
+      margin-left: $spacing-sm;
+    }
+  }
+}
+
+.fixture-team-name {
+  font-family: $font-body;
+  font-weight: 500;
+  font-size: 0.95rem;
+  color: $text-secondary;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  @media (max-width: 500px) {
+    font-size: 0.85rem;
+  }
+}
+
+.fixture-status {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-width: 3.5rem;
+  flex-shrink: 0;
+}
+
+.fixture-score {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  background-color: $background-light;
+  border: 1px solid rgba($white, 0.1);
+  border-radius: $radius-sm;
+  padding: 0.35rem 0.65rem;
+  font-family: $font-display;
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: $white;
+  letter-spacing: 0.05em;
+  font-variant-numeric: tabular-nums;
+  box-shadow: $shadow-sm;
+
+  &-val {
+    min-width: 0.75rem;
+    text-align: center;
+  }
+
+  &-dash {
+    color: $text-tertiary;
+  }
+}
+
+.fixture-vs {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba($white, 0.04);
+  border: 1px solid rgba($white, 0.08);
+  border-radius: $radius-sm;
+  padding: 0.35rem 0.65rem;
+  font-family: $font-display;
+  font-weight: 600;
+  font-size: 0.8rem;
+  color: $text-tertiary;
+  letter-spacing: 0.05em;
+  min-width: 2rem;
+  text-align: center;
+}
+
+.fixture-list-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: $spacing-xl;
+  background-color: rgba($white, 0.02);
+  border: 1px dashed rgba($white, 0.08);
+  border-radius: $radius-lg;
+  color: $text-tertiary;
+  font-family: $font-body;
+  font-size: 0.95rem;
+  text-align: center;
+}

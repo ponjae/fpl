@@ -8,6 +8,7 @@ export type HyperlinkProps = {
   route: Route;
   params?: Record<string, string | number>;
   searchParam?: string;
+  searchParams?: Record<string, string | number | undefined>;
   children: React.ReactNode;
   subtle?: boolean;
   onClick?: () => void;
@@ -17,6 +18,7 @@ const Hyperlink: React.FC<HyperlinkProps> = ({
   route,
   params,
   searchParam,
+  searchParams,
   children,
   subtle = false,
   onClick,
@@ -24,7 +26,21 @@ const Hyperlink: React.FC<HyperlinkProps> = ({
   const { navigate, navigateWithSearch } = useNavigate();
 
   const baseUrl = params ? toPath(route, params) : route;
-  const url = searchParam ? `${baseUrl}?search=${searchParam}` : baseUrl;
+
+  const queryParams = new URLSearchParams();
+  if (searchParam) {
+    queryParams.set('search', searchParam);
+  }
+  if (searchParams) {
+    Object.entries(searchParams).forEach(([key, val]) => {
+      if (val !== undefined) {
+        queryParams.set(key, String(val));
+      }
+    });
+  }
+
+  const queryString = queryParams.toString();
+  const url = queryString ? `${baseUrl}?${queryString}` : baseUrl;
 
   const handleClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
     event.preventDefault();
@@ -32,13 +48,11 @@ const Hyperlink: React.FC<HyperlinkProps> = ({
     if (onClick) {
       onClick();
     } else {
-      searchParam
-        ? navigateWithSearch(
-            route,
-            params,
-            new URLSearchParams({ search: searchParam })
-          )
-        : navigate(route, params);
+      if (queryString) {
+        navigateWithSearch(route, params, queryParams);
+      } else {
+        navigate(route, params);
+      }
     }
   };
 

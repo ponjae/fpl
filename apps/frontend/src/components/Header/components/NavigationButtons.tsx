@@ -14,9 +14,11 @@ export type NavigationItem = {
 };
 
 export const NAVIGATION_BUTTONS: NavigationItem[] = [
-  { label: 'Ranking', route: Routes.Ranking },
-  { label: 'Best Team', route: Routes.BestTeam },
-  { label: 'About', route: Routes.About },
+  { label: 'Players', route: Routes.Players },
+  { label: 'Optimizer', route: Routes.Optimizer },
+  { label: 'My Squad', route: Routes.MySquad },
+  { label: 'Teams', route: Routes.Teams },
+  { label: 'Fixtures', route: Routes.Fixtures },
 ];
 
 export const NavigationButtons = ({

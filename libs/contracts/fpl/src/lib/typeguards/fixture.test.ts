@@ -43,6 +43,7 @@ const validFixtureEntry = {
   home_score: 2,
   away_score: 1,
   gw: 1,
+  kickoff_time: '2025-08-16T14:00:00Z',
 };
 
 const validReadableFixtureEntry = {
@@ -52,6 +53,7 @@ const validReadableFixtureEntry = {
   home_score: 2,
   away_score: 1,
   gw: 1,
+  kickoff_time: '2025-08-16T14:00:00Z',
 };
 
 describe('Typeguards: Fixture', () => {
@@ -130,8 +132,20 @@ describe('Typeguards: Fixture', () => {
         home_team: 1,
         away_team: 2,
         gw: 1,
+        kickoff_time: '2025-08-16T14:00:00Z',
       };
       expect(isFixtureEntry(entryWithoutScores)).toBe(true);
+    });
+
+    it('should return true for FixtureEntry with null kickoff_time', () => {
+      const entryNullKickoff = {
+        finished: false,
+        home_team: 1,
+        away_team: 2,
+        gw: 1,
+        kickoff_time: null,
+      };
+      expect(isFixtureEntry(entryNullKickoff)).toBe(true);
     });
 
     it('should return false for invalid FixtureEntry', () => {
@@ -171,8 +185,20 @@ describe('Typeguards: Fixture', () => {
         home_team: 'Arsenal',
         away_team: 'Chelsea',
         gw: 1,
+        kickoff_time: '2025-08-16T14:00:00Z',
       };
       expect(isReadableFixtureEntry(entryWithoutScores)).toBe(true);
+    });
+
+    it('should return true for ReadableFixtureEntry with null kickoff_time', () => {
+      const entryNullKickoff = {
+        finished: false,
+        home_team: 'Arsenal',
+        away_team: 'Chelsea',
+        gw: 1,
+        kickoff_time: null,
+      };
+      expect(isReadableFixtureEntry(entryNullKickoff)).toBe(true);
     });
 
     it('should return false for invalid ReadableFixtureEntry', () => {

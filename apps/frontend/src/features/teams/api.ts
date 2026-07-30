@@ -1,4 +1,4 @@
-import { TeamData, TeamDataDict } from '@fpl/contracts/fpl';
+import { TeamData, TeamDataDict, TeamNamesById } from '@fpl/contracts/fpl';
 import { Routes } from '@fpl/contracts/self-service';
 import { toPath } from '@fpl/utils';
 import { api } from '../api';
@@ -10,6 +10,10 @@ export const teamsApi = api.injectEndpoints({
       query: () => Routes.Teams,
       providesTags: [{ type: 'team', id: 'all' }],
     }),
+    getTeamNames: build.query<TeamNamesById, void>({
+      query: () => Routes.TeamNames,
+      providesTags: [{ type: 'team', id: 'names' }],
+    }),
     getTeam: build.query<TeamData, IdArg>({
       query: ({ id }) => toPath(Routes.Team, { id }),
       providesTags: (_r, _e, { id }) => [{ type: 'team', id }],
@@ -19,6 +23,7 @@ export const teamsApi = api.injectEndpoints({
 
 export const {
   useGetTeamsQuery,
+  useGetTeamNamesQuery,
   useGetTeamQuery,
   useLazyGetTeamQuery,
 } = teamsApi;

@@ -11,7 +11,7 @@ export class GetFixtures extends ApplicationEndpoint<Fixture[]> {
   protected async sendRequest(): Promise<Fixture[]> {
     const response = await new Request<Fixture[]>(
       Method.Get,
-      'https://fantasy.premierleague.com/api/fixtures'
+      'https://fantasy.premierleague.com/api/fixtures/'
     ).send();
 
     return response.getData();

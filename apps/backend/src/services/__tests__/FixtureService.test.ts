@@ -15,7 +15,8 @@ const makeFixture = (
   gw: number,
   homeTeam: number,
   awayTeam: number,
-  finished: boolean
+  finished: boolean,
+  kickoff_time: string | null = '2025-08-16T14:00:00Z'
 ): FixtureEntry => ({
   finished,
   home_team: homeTeam,
@@ -23,6 +24,7 @@ const makeFixture = (
   home_score: finished ? 1 : undefined,
   away_score: finished ? 0 : undefined,
   gw,
+  kickoff_time,
 });
 
 const makeData = (

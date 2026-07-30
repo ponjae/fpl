@@ -1,5 +1,5 @@
 import { useApiError } from '../../api/hooks';
-import { useGetTeamQuery, useGetTeamsQuery } from '../api';
+import { useGetTeamNamesQuery, useGetTeamQuery, useGetTeamsQuery } from '../api';
 
 /**
  * Hook for getting every Premier League club.
@@ -10,6 +10,20 @@ export const useGetTeams = () => {
   const { data, isLoading, error } = useGetTeamsQuery();
 
   return { teams: data, isLoading, error: useApiError(error) };
+};
+
+/**
+ * Hook for getting a mapping of team id → team name.
+ *
+ * Useful for resolving numeric team ids from fixture data to human-readable
+ * names. Returns an empty object when data has not yet loaded.
+ *
+ * @returns the id→name map, loading state and any error.
+ */
+export const useGetTeamNames = () => {
+  const { data, isLoading, error } = useGetTeamNamesQuery();
+
+  return { teamNamesById: data ?? {}, isLoading, error: useApiError(error) };
 };
 
 /**

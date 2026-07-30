@@ -1,0 +1,74 @@
+@use '../../variables.scss' as *;
+
+.stat-value-card {
+  display: flex;
+  flex-direction: column;
+  padding: 1.25rem;
+  background-color: rgba($white, 0.02);
+  border: 1px solid rgba($white, 0.06);
+  border-radius: $radius-lg;
+  box-shadow: $shadow-sm;
+  box-sizing: border-box;
+  gap: 0.25rem;
+  min-width: 8rem;
+
+  &--default {
+    .stat-value-num {
+      color: $white;
+    }
+  }
+
+  &--success {
+    border-color: rgba($success-green, 0.15);
+    background-color: rgba($success-green, 0.01);
+    
+    .stat-value-num {
+      color: $success-green;
+    }
+  }
+
+  &--warning {
+    border-color: rgba($warning-yellow, 0.15);
+    background-color: rgba($warning-yellow, 0.01);
+
+    .stat-value-num {
+      color: $warning-yellow;
+    }
+  }
+
+  &--danger {
+    border-color: rgba($error-red, 0.15);
+    background-color: rgba($error-red, 0.01);
+
+    .stat-value-num {
+      color: $error-red;
+    }
+  }
+}
+
+.stat-value-label {
+  font-family: $font-display;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: $text-tertiary;
+  letter-spacing: 0.05em;
+  line-height: 1.2;
+}
+
+.stat-value-num {
+  font-family: $font-display;
+  font-size: 1.75rem;
+  font-weight: 800;
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+}
+
+.stat-value-hint {
+  font-family: $font-body;
+  font-size: 0.75rem;
+  color: $text-tertiary;
+  margin-top: 0.25rem;
+  line-height: 1.3;
+}

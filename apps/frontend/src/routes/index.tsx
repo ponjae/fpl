@@ -1,5 +1,5 @@
 import { lazy, Suspense } from 'react';
-import { createBrowserRouter, Outlet } from 'react-router-dom';
+import { createBrowserRouter, Outlet, Navigate } from 'react-router-dom';
 import PageLayout from '../components/PageLayout';
 import ErrorPage from '../pages/ErrorPage';
 import ErrorBoundary from './ErrorBoundary';
@@ -7,19 +7,22 @@ import { Routes } from './types';
 export * from './hooks';
 
 const HomePage = lazy(() => import('../pages/HomePage'));
-const RankingPage = lazy(() => import('../pages/RankingPage'));
-const BestTeamPage = lazy(() => import('../pages/BestTeamPage'));
+const PlayersPage = lazy(() => import('../pages/PlayersPage'));
+const PlayerDetailPage = lazy(() => import('../pages/PlayerDetailPage'));
+const TeamsPage = lazy(() => import('../pages/TeamsPage'));
+const TeamDetailPage = lazy(() => import('../pages/TeamDetailPage'));
+const FixturesPage = lazy(() => import('../pages/FixturesPage'));
+const OptimizerPage = lazy(() => import('../pages/OptimizerPage'));
+const MySquadPage = lazy(() => import('../pages/MySquadPage'));
 const AboutPage = lazy(() => import('../pages/AboutPage'));
 
 const RootLayout: React.FC = () => (
   <ErrorBoundary>
-    {/* <OverviewProvider> */}
     <PageLayout>
       <Suspense>
         <Outlet />
       </Suspense>
     </PageLayout>
-    {/* </OverviewProvider> */}
   </ErrorBoundary>
 );
 
@@ -32,16 +35,44 @@ export const router = createBrowserRouter([
         element: <HomePage />,
       },
       {
-        path: Routes.Ranking,
-        element: <RankingPage />,
+        path: Routes.Players,
+        element: <PlayersPage />,
       },
       {
-        path: Routes.BestTeam,
-        element: <BestTeamPage />,
+        path: Routes.PlayerDetail,
+        element: <PlayerDetailPage />,
+      },
+      {
+        path: Routes.Teams,
+        element: <TeamsPage />,
+      },
+      {
+        path: Routes.TeamDetail,
+        element: <TeamDetailPage />,
+      },
+      {
+        path: Routes.Fixtures,
+        element: <FixturesPage />,
+      },
+      {
+        path: Routes.Optimizer,
+        element: <OptimizerPage />,
+      },
+      {
+        path: Routes.MySquad,
+        element: <MySquadPage />,
       },
       {
         path: Routes.About,
         element: <AboutPage />,
+      },
+      {
+        path: Routes.Ranking,
+        element: <Navigate to={Routes.Players} replace />,
+      },
+      {
+        path: Routes.BestTeam,
+        element: <Navigate to={Routes.Optimizer} replace />,
       },
       {
         path: '/*',

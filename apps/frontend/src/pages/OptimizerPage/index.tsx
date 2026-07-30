@@ -1,12 +1,12 @@
 import React from 'react';
 import './index.scss';
 
-const BestTeamPage: React.FC = () => {
+const OptimizerPage: React.FC = () => {
   return (
-    <div className="best-team-page">
+    <div className="optimizer-page">
       {/* Page content goes here */}
     </div>
   );
 };
 
-export default BestTeamPage;
+export default OptimizerPage;

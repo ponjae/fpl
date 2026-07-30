@@ -1,4 +1,4 @@
-import { TeamData, TeamDataDict } from '@fpl/contracts/fpl';
+import { TeamData, TeamDataDict, TeamNamesById } from '@fpl/contracts/fpl';
 import { Routes } from '@fpl/contracts/self-service';
 import { Decorators } from '@fpl/fpl-express';
 import { Method } from '@fpl/network';
@@ -25,6 +25,29 @@ export class TeamController extends ApplicationController {
     const teams = await teamService.getAllTeams(data);
 
     res.send(teams);
+  }
+
+  /**
+   * Get a mapping of team id → team name.
+   *
+   * Exposes `ProcessedData.idTeamDict` so the frontend can resolve numeric
+   * team ids (used in fixture data) to human-readable names without having to
+   * derive the mapping from the full player payload.
+   *
+   * @param req - the request object.
+   * @param res - the response object.
+   */
+  @Decorators.Route(Method.Get, Routes.TeamNames)
+  public async getTeamNames(
+    req: Req,
+    res: Res<TeamNamesById>
+  ): Promise<void> {
+    const context = this.getContext();
+
+    const fplDataService = context.getService(FPLDataService, req);
+    const data = await fplDataService.getData();
+
+    res.send(data.idTeamDict);
   }
 
   /**

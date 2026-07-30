@@ -87,7 +87,8 @@ export const isFixtureEntry = (f: unknown): f is FixtureEntry =>
   isNumber(f.away_team) &&
   isOptionallyDefined(f.home_score, isNumber) &&
   isOptionallyDefined(f.away_score, isNumber) &&
-  isNumber(f.gw);
+  isNumber(f.gw) &&
+  (isString(f.kickoff_time) || f.kickoff_time === null);
 
 const isFixtureEntryArray = (arr: unknown): arr is FixtureEntry[] =>
   isArrayOfType(arr, isFixtureEntry);
@@ -116,7 +117,8 @@ export const isReadableFixtureEntry = (r: unknown): r is ReadableFixtureEntry =>
   isString(r.away_team) &&
   isOptionallyDefined(r.home_score, isNumber) &&
   isOptionallyDefined(r.away_score, isNumber) &&
-  isNumber(r.gw);
+  isNumber(r.gw) &&
+  (isString(r.kickoff_time) || r.kickoff_time === null);
 
 const isReadableFixtureEntryArray = (
   arr: unknown

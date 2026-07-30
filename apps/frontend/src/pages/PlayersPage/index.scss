@@ -1,0 +1,32 @@
+@use '../../variables.scss' as *;
+
+.players-page {
+  padding: 1.5rem;
+  width: 100%;
+  box-sizing: border-box;
+
+  @media (min-width: 768px) {
+    padding: 2.5rem 2rem;
+  }
+
+  &__container {
+    width: 100%;
+    max-width: 1440px;
+    margin: 0 auto;
+  }
+
+  &__last-updated {
+    font-family: $font-body;
+    font-size: 0.8rem;
+    color: $text-tertiary;
+    background-color: rgba($white, 0.02);
+    border: 1px solid rgba($white, 0.05);
+    padding: 0.4rem 0.8rem;
+    border-radius: $radius-full;
+    white-space: nowrap;
+    display: inline-flex;
+    align-items: center;
+    box-sizing: border-box;
+    font-weight: 500;
+  }
+}

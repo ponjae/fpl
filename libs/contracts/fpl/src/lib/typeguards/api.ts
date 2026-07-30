@@ -9,6 +9,7 @@ import {
   AllData,
   ChipPlay,
   ElementType,
+  Event,
   Fixture,
   RawPlayer,
   RawTeam,
@@ -39,7 +40,7 @@ export const isAllData = (d: unknown): d is AllData =>
 export const isRawPlayer = (p: unknown): p is RawPlayer =>
   isObject(p) &&
   isNumber(p.assists) &&
-  isString(p.birth_date) &&
+  (isString(p.birth_date) || p.birth_date === null) &&
   isNumber(p.bonus) &&
   isNumber(p.bps) &&
   isBoolean(p.can_select) &&
@@ -52,8 +53,8 @@ export const isRawPlayer = (p: unknown): p is RawPlayer =>
   isNumber(p.defensive_contribution_per_90) &&
   isNumber(p.dreamteam_count) &&
   isNumber(p.element_type) &&
-  isString(p.ep_next) &&
-  isString(p.ep_this) &&
+  (isString(p.ep_next) || p.ep_next === null) &&
+  (isString(p.ep_this) || p.ep_this === null) &&
   isNumber(p.event_points) &&
   isString(p.expected_assists) &&
   isNumber(p.expected_assists_per_90) &&
@@ -121,7 +122,7 @@ export const isRawTeam = (t: unknown): t is RawTeam =>
   isNumber(t.id) &&
   isString(t.name) &&
   isString(t.short_name) &&
-  isNumber(t.strength) &&
+  (isNumber(t.strength) || t.strength === null) &&
   isNumber(t.strength_attack_away) &&
   isNumber(t.strength_attack_home) &&
   isNumber(t.strength_defence_away) &&
@@ -161,12 +162,12 @@ export const isEvent = (e: unknown): e is Event =>
   isNumber(e.average_entry_score) &&
   isArrayOfType(e.chip_plays, isChipPlay) &&
   isBoolean(e.finished) &&
-  isNumber(e.highest_score) &&
+  (isNumber(e.highest_score) || e.highest_score === null) &&
   isNumber(e.id) &&
-  isNumber(e.most_captained) &&
+  (isNumber(e.most_captained) || e.most_captained === null) &&
   isString(e.name) &&
-  isNumber(e.top_element) &&
-  isTopElementInfo(e.top_element_info) &&
+  (isNumber(e.top_element) || e.top_element === null) &&
+  (isTopElementInfo(e.top_element_info) || e.top_element_info === null) &&
   isNumber(e.transfers_made);
 
 /**
@@ -197,7 +198,7 @@ export const isFixture = (f: unknown): f is Fixture =>
   isBoolean(f.finished) &&
   isBoolean(f.finished_provisional) &&
   isNumber(f.id) &&
-  isString(f.kickoff_time) &&
+  (isString(f.kickoff_time) || f.kickoff_time === null) &&
   isNumber(f.team_a) &&
   (isNumber(f.team_a_score) || f.team_a_score === null) &&
   isNumber(f.team_h) &&

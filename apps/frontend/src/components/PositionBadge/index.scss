@@ -1,0 +1,43 @@
+@use '../../variables.scss' as *;
+
+.position-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.2rem 0.6rem;
+  border-radius: $radius-full;
+  font-family: $font-display;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  border-width: 1px;
+  border-style: solid;
+  line-height: 1;
+  white-space: nowrap;
+  vertical-align: middle;
+
+  &--gk {
+    background-color: rgba($goalkeeper, 0.1);
+    border-color: rgba($goalkeeper, 0.3);
+    color: $goalkeeper;
+  }
+
+  &--def {
+    background-color: rgba($defender, 0.1);
+    border-color: rgba($defender, 0.3);
+    color: $defender;
+  }
+
+  &--mid {
+    background-color: rgba($midfielder, 0.1);
+    border-color: rgba($midfielder, 0.3);
+    color: $midfielder;
+  }
+
+  &--fwd {
+    background-color: rgba($forward, 0.1);
+    border-color: rgba($forward, 0.3);
+    color: $forward;
+  }
+}

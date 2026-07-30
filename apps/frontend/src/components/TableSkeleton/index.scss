@@ -1,0 +1,64 @@
+@use '../../variables.scss' as *;
+
+.table-skeleton-wrapper {
+  width: 100%;
+  border-radius: $radius-lg;
+  background-color: $background-card;
+  border: 1px solid rgba($white, 0.08);
+  box-shadow: $shadow-md;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.table-skeleton {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: $font-body;
+  border-spacing: 0;
+
+  th, td {
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid rgba($white, 0.06);
+    box-sizing: border-box;
+  }
+
+  th {
+    background-color: rgba($black, 0.3);
+  }
+
+  tr {
+    &:nth-child(even) {
+      background-color: rgba($white, 0.01);
+    }
+  }
+}
+
+.table-skeleton__header-shimmer {
+  width: 50%;
+  height: 0.75rem;
+  border-radius: $radius-sm;
+  background: rgba($white, 0.06);
+}
+
+.table-skeleton__cell-shimmer {
+  width: 75%;
+  height: 0.85rem;
+  border-radius: $radius-sm;
+  background: linear-gradient(90deg, rgba($white, 0.04) 25%, rgba($white, 0.1) 50%, rgba($white, 0.04) 75%);
+  background-size: 200% 100%;
+  animation: table-skeleton-shimmer 1.5s infinite;
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+    background: rgba($white, 0.06);
+  }
+}
+
+@keyframes table-skeleton-shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}

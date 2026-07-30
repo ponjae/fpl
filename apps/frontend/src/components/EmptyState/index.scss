@@ -1,0 +1,59 @@
+@use '../../variables.scss' as *;
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 4rem 2rem;
+  background-color: $background-card;
+  border: 1px solid rgba($white, 0.08);
+  border-radius: $radius-xl;
+  box-shadow: $shadow-md;
+  width: 100%;
+  max-width: 32rem;
+  margin: 2rem auto;
+  box-sizing: border-box;
+
+  &__icon-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 5rem;
+    height: 5rem;
+    border-radius: $radius-full;
+    background-color: rgba($white, 0.02);
+    border: 1px solid rgba($white, 0.05);
+    color: $text-tertiary;
+    margin-bottom: 1.5rem;
+  }
+
+  &__icon {
+    opacity: 0.6;
+  }
+
+  &__title {
+    font-family: $font-display;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: $white;
+    margin: 0 0 0.5rem 0;
+    letter-spacing: -0.01em;
+  }
+
+  &__message {
+    font-family: $font-body;
+    font-size: 0.9rem;
+    color: $text-secondary;
+    margin: 0 0 1.5rem 0;
+    line-height: 1.5;
+    max-width: 24rem;
+  }
+
+  &__action {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+  }
+}

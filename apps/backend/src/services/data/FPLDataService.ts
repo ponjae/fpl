@@ -243,6 +243,7 @@ export class FPLDataService extends ApplicationService {
       team_a,
       team_h_score,
       team_a_score,
+      kickoff_time,
     } of fixtures) {
       const gw = event;
       if (!gw) {
@@ -260,6 +261,7 @@ export class FPLDataService extends ApplicationService {
         home_score: team_h_score ?? undefined,
         away_score: team_a_score ?? undefined,
         gw,
+        kickoff_time,
       });
     }
 
@@ -283,13 +285,14 @@ export class FPLDataService extends ApplicationService {
 
     for (const [gw, fixtures] of Object.entries(fixturesByGw)) {
       readableFixtures[Number(gw)] = fixtures.map(
-        ({ finished, home_team, away_team, home_score, away_score, gw }) => ({
+        ({ finished, home_team, away_team, home_score, away_score, gw, kickoff_time }) => ({
           finished,
           home_team: teamIdToName.get(home_team) || '',
           away_team: teamIdToName.get(away_team) || '',
           home_score,
           away_score,
           gw,
+          kickoff_time,
         })
       );
     }

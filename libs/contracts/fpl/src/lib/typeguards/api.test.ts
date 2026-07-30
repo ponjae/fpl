@@ -167,6 +167,27 @@ describe('Typeguards: API', () => {
       };
       expect(isRawPlayer(invalidPlayer)).toBe(false);
     });
+
+    // Regression: pre-season, the live FPL API returns `ep_this: null` for
+    // every player because expected points have not been computed yet. When
+    // these fields were typed as a plain string, isRawPlayer rejected all 564
+    // players, which failed isAllData and surfaced as a 422 on every endpoint.
+    it('should accept a null ep_this (pre-season)', () => {
+      expect(isRawPlayer({ ...validPlayer, ep_this: null })).toBe(true);
+    });
+
+    it('should accept a null ep_next (pre-season)', () => {
+      expect(isRawPlayer({ ...validPlayer, ep_next: null })).toBe(true);
+    });
+
+    // FPL does not publish a date of birth for every player.
+    it('should accept a null birth_date', () => {
+      expect(isRawPlayer({ ...validPlayer, birth_date: null })).toBe(true);
+    });
+
+    it('should still reject a non-string, non-null ep_this', () => {
+      expect(isRawPlayer({ ...validPlayer, ep_this: 5.3 })).toBe(false);
+    });
   });
 
   describe('isRawTeam', () => {

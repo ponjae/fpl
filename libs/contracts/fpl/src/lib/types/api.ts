@@ -17,7 +17,8 @@ export type AllData = {
  */
 export type RawPlayer = {
   assists: number;
-  birth_date: string;
+  /** Null for players whose date of birth FPL does not publish. */
+  birth_date: string | null;
   bonus: number;
   bps: number;
   can_select: boolean;
@@ -30,8 +31,20 @@ export type RawPlayer = {
   defensive_contribution_per_90: number;
   dreamteam_count: number;
   element_type: number;
-  ep_next: string;
-  ep_this: string;
+  /**
+   * Expected points for the next gameweek.
+   *
+   * Null outside the season (e.g. pre-season) when FPL has not yet computed
+   * expected points.
+   */
+  ep_next: string | null;
+  /**
+   * Expected points for the current gameweek.
+   *
+   * Null outside the season (e.g. pre-season) when FPL has not yet computed
+   * expected points.
+   */
+  ep_this: string | null;
   event_points: number;
   expected_assists: string;
   expected_assists_per_90: number;
@@ -95,7 +108,8 @@ export type RawTeam = {
   id: number;
   name: string;
   short_name: string;
-  strength: number;
+  /** Null before the season starts, when FPL has not yet rated the club. */
+  strength: number | null;
   strength_attack_away: number;
   strength_attack_home: number;
   strength_defence_away: number;
@@ -127,12 +141,16 @@ export type Event = {
   average_entry_score: number;
   chip_plays: ChipPlay[];
   finished: boolean;
-  highest_score: number;
+  /** Null before the gameweek has been played. */
+  highest_score: number | null;
   id: number;
-  most_captained: number;
+  /** Player id. Null before the gameweek has been played. */
+  most_captained: number | null;
   name: string;
-  top_element: 531;
-  top_element_info: TopElementInfo;
+  /** Player id. Null before the gameweek has been played. */
+  top_element: number | null;
+  /** Null before the gameweek has been played. */
+  top_element_info: TopElementInfo | null;
   transfers_made: number;
 };
 
@@ -160,7 +178,8 @@ export type Fixture = {
   finished: boolean;
   finished_provisional: boolean;
   id: number;
-  kickoff_time: string;
+  /** Null for unscheduled fixtures (e.g. pre-season or postponed matches). */
+  kickoff_time: string | null;
   team_a: number;
   team_a_score: number | null;
   team_h: number;
