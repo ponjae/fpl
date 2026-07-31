@@ -2,6 +2,8 @@ import {
   SquadHorizon,
   TransferSuggestion,
   UnderPerformer,
+  TransferPlanRequest,
+  TransferPlan,
 } from '@fpl/contracts/fpl';
 import { Routes } from '@fpl/contracts/self-service';
 import { api } from '../api';
@@ -35,10 +37,18 @@ export const transfersApi = api.injectEndpoints({
         body,
       }),
     }),
+    planTransfers: build.mutation<TransferPlan, TransferPlanRequest>({
+      query: (body) => ({
+        url: Routes.TransferPlan,
+        method: 'POST',
+        body,
+      }),
+    }),
   }),
 });
 
 export const {
   useSuggestTransfersMutation,
   useGetUnderPerformersMutation,
+  usePlanTransfersMutation,
 } = transfersApi;

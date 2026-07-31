@@ -182,3 +182,79 @@ export type UnderPerformer = {
  */
 export const horizonToSortKey = (horizon: SquadHorizon): PlayerSortKey =>
   horizon;
+
+// ---------------------------------------------------------------------------
+// Transfer plan — joint multi-transfer request and response types.
+// ---------------------------------------------------------------------------
+
+/**
+ * A squad player supplied by the caller, optionally with a known selling price.
+ */
+export type TransferPlanSquadPlayer = {
+  playerId: number;
+  /**
+   * Actual FPL selling price in millions, when known.
+   * Falls back to current price when omitted.
+   */
+  sellingPrice?: number;
+};
+
+/**
+ * Request body for the joint multi-transfer planner.
+ */
+export type TransferPlanRequest = {
+  squad: TransferPlanSquadPlayer[];
+  /** Money in the bank, in millions. */
+  bank: number;
+  /** Max transfers to use without a points hit. Validate as integer 0..5. */
+  freeTransfers: number;
+  horizon?: SquadHorizon;
+};
+
+/**
+ * A single transfer move within a joint plan, ordered for display.
+ */
+export type TransferPlanMove = {
+  /** 1-based display order. Financially releasing moves first. */
+  order: number;
+  playerOut: ProcessedPlayer;
+  playerIn: ProcessedPlayer;
+  sellingPrice: number;
+  purchasePrice: number;
+  /** Positive consumes bank; negative releases funds. */
+  costDelta: number;
+  valueGain: number;
+};
+
+/**
+ * Describes how transfer prices were sourced.
+ *
+ * - `current_price`          — all players used the live FPL price.
+ * - `provided_selling_price` — all selling prices came from the caller.
+ * - `mixed`                  — some from the caller, some fell back to live price.
+ */
+export type TransferPlanPriceBasis =
+  | 'current_price'
+  | 'provided_selling_price'
+  | 'mixed';
+
+/**
+ * The result of a joint multi-transfer optimisation.
+ */
+export type TransferPlan = {
+  moves: TransferPlanMove[];
+  transfersUsed: number;
+  freeTransfers: number;
+  netSpend: number;
+  resultingBank: number;
+  currentTotalValue: number;
+  resultingTotalValue: number;
+  totalValueGain: number;
+  resultingPicks: SquadPick[];
+  resultingFormation: string;
+  horizon: SquadHorizon;
+  /** True ONLY when the solver proved this bundle optimal. */
+  optimal: boolean;
+  candidatesConsidered: number;
+  priceBasis: TransferPlanPriceBasis;
+};

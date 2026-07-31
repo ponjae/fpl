@@ -1,7 +1,227 @@
 @use '../../variables.scss' as *;
 
 .team-detail-page {
-  padding: 2rem;
+  padding: $spacing-xl;
+  max-width: 1400px;
+  margin: 0 auto;
   width: 100%;
   box-sizing: border-box;
+
+  &__container {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-lg;
+  }
+
+  &__nav-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: -$spacing-xs;
+  }
+}
+
+.team-detail-loading {
+  padding: $spacing-xl 0;
+}
+
+// ==========================================
+// Club Hero Banner
+// ==========================================
+.team-hero {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: $spacing-xl;
+  padding: $spacing-xl;
+  background: linear-gradient(135deg, $background-card 0%, rgba($background-light, 0.4) 100%);
+  border: 1px solid $border-color;
+  border-radius: $radius-xl;
+  box-shadow: $shadow-md;
+  overflow: hidden;
+  position: relative;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background-color: $brand-purple;
+  }
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: $spacing-lg;
+    padding: $spacing-lg;
+  }
+
+  &__badge-wrapper {
+    background-color: rgba($white, 0.03);
+    border: 1px solid rgba($white, 0.05);
+    border-radius: $radius-lg;
+    padding: $spacing-md;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: $shadow-inner;
+  }
+
+  &__info {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-md;
+    flex: 1;
+    width: 100%;
+  }
+
+  &__title-row {
+    display: flex;
+    align-items: baseline;
+    gap: $spacing-md;
+    flex-wrap: wrap;
+  }
+
+  &__name {
+    font-family: $font-display;
+    font-size: 2.25rem;
+    font-weight: 800;
+    color: $text-primary;
+    margin: 0;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+
+    @media (max-width: 480px) {
+      font-size: 1.75rem;
+    }
+  }
+
+  &__nickname {
+    font-family: $font-body;
+    font-size: 1.125rem;
+    font-weight: 500;
+    color: $brand-purple;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  &__trivia {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: $spacing-md;
+    border-top: 1px solid rgba($border-color, 0.8);
+    padding-top: $spacing-md;
+    width: 100%;
+  }
+
+  &__trivia-item {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-xs;
+  }
+
+  &__trivia-label {
+    font-size: 0.75rem;
+    color: $text-tertiary;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 600;
+  }
+
+  &__trivia-value {
+    font-size: 0.95rem;
+    color: $text-secondary;
+    font-weight: 500;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 180px;
+
+    &.highlight {
+      color: $success-green;
+      font-family: $font-display;
+      font-weight: 700;
+      font-size: 1.1rem;
+    }
+  }
+}
+
+// ==========================================
+// Split Content Grid
+// ==========================================
+.team-detail-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: $spacing-xl;
+  align-items: start;
+
+  @media (max-width: 1024px) {
+    grid-template-columns: 1fr;
+    gap: $spacing-lg;
+  }
+}
+
+.team-detail-column {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-md;
+
+  &--main {
+    min-width: 0; // Prevent overflow
+  }
+
+  &--sidebar {
+    position: sticky;
+    top: calc($header-height + $spacing-md);
+
+    @media (max-width: 1024px) {
+      position: static;
+    }
+  }
+}
+
+// ==========================================
+// Position Filter Tabs
+// ==========================================
+.position-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $spacing-sm;
+  background-color: rgba($black, 0.2);
+  border: 1px solid $border-color;
+  padding: $spacing-xs;
+  border-radius: $radius-lg;
+  margin-bottom: $spacing-md;
+  width: fit-content;
+
+  @media (max-width: 480px) {
+    width: 100%;
+    justify-content: stretch;
+    
+    .position-tab {
+      flex: 1 1 calc(50% - $spacing-xs);
+      text-align: center;
+    }
+  }
+}
+
+.position-tab {
+  &.active {
+    background-color: $brand-purple;
+    color: $text-on-light;
+    box-shadow: $shadow-sm;
+  }
+
+  &:hover:not(.active) {
+    background-color: rgba($white, 0.05);
+  }
+}
+
+.roster-table-wrapper {
+  overflow-x: auto;
+  border: 1px solid $border-color;
+  border-radius: $radius-lg;
+  background-color: $background-card;
+  box-shadow: $shadow-sm;
 }

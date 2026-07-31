@@ -1,7 +1,263 @@
 @use '../../variables.scss' as *;
 
 .fixtures-page {
-  padding: 2rem;
+  padding: 1.5rem;
   width: 100%;
   box-sizing: border-box;
+
+  @media (min-width: 768px) {
+    padding: 2.5rem 2rem;
+  }
+
+  &__container {
+    width: 100%;
+    max-width: 1440px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-xl;
+  }
+
+  &__header {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-md;
+    border-bottom: 1px solid rgba($white, 0.05);
+    padding-bottom: $spacing-lg;
+
+    @media (min-width: 1024px) {
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+    }
+  }
+
+  &__titles {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-xs;
+  }
+
+  &__title {
+    font-family: $font-display;
+    font-size: 2rem;
+    font-weight: 800;
+    color: $text-primary;
+    margin: 0;
+    letter-spacing: -0.02em;
+
+    @media (min-width: 768px) {
+      font-size: 2.5rem;
+    }
+  }
+
+  &__subtitle {
+    font-family: $font-body;
+    font-size: 0.95rem;
+    color: $text-secondary;
+    margin: 0;
+  }
+}
+
+/* Gameweek Selector Control Bar */
+.fixtures-control-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: $spacing-md;
+
+  &__navigation {
+    display: flex;
+    align-items: center;
+    gap: $spacing-sm;
+    background-color: rgba($white, 0.02);
+    border: 1px solid rgba($white, 0.04);
+    padding: $spacing-xs;
+    border-radius: $radius-lg;
+    box-shadow: $shadow-inner;
+  }
+
+  &__select-wrapper {
+    position: relative;
+    display: inline-block;
+  }
+
+  &__select {
+    appearance: none;
+    background-color: $background-light;
+    border: 1px solid rgba($white, 0.1);
+    border-radius: $radius-md;
+    color: $text-primary;
+    font-family: $font-display;
+    font-weight: 600;
+    font-size: 0.9rem;
+    padding: 0.5rem 2rem 0.5rem 1rem;
+    cursor: pointer;
+    min-width: 130px;
+    text-align: center;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+
+    &:hover, &:focus {
+      border-color: rgba($brand-purple, 0.5);
+      outline: none;
+      box-shadow: 0 0 0 2px rgba($brand-purple, 0.2);
+    }
+  }
+
+  /* Custom chevron arrow for the select wrapper */
+  &__select-wrapper::after {
+    content: '▼';
+    font-size: 0.6rem;
+    color: $text-tertiary;
+    position: absolute;
+    right: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+  }
+
+  &__status {
+    display: flex;
+    align-items: center;
+  }
+}
+
+.fixtures-control-bar-placeholder {
+  height: 2.75rem;
+  width: 320px;
+  background-color: rgba($white, 0.02);
+  border-radius: $radius-lg;
+  animation: pulse 1.5s infinite ease-in-out;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 0.8;
+  }
+}
+
+/* Gameweek Badge */
+.gw-badge {
+  font-family: $font-display;
+  font-weight: 700;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.4rem 0.8rem;
+  border-radius: $radius-full;
+  display: inline-flex;
+  align-items: center;
+  gap: $spacing-xs;
+  box-shadow: $shadow-sm;
+
+  &--current {
+    background-color: rgba($success-green, 0.1);
+    border: 1px solid rgba($success-green, 0.3);
+    color: $success-green;
+    box-shadow: $glow-mint;
+  }
+
+  &--finished {
+    background-color: rgba($white, 0.02);
+    border: 1px solid rgba($white, 0.08);
+    color: $text-tertiary;
+  }
+
+  &--upcoming {
+    background-color: rgba($brand-purple, 0.1);
+    border: 1px solid rgba($brand-purple, 0.3);
+    color: $brand-purple;
+    box-shadow: $glow-accent;
+  }
+}
+
+/* Gameweek Summary Layout */
+.gameweek-summary {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: $spacing-lg;
+  width: 100%;
+
+  @media (min-width: 1024px) {
+    grid-template-columns: 3fr 2fr;
+  }
+
+  &__stats {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: $spacing-md;
+
+    @media (min-width: 640px) {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+
+  &__chips {
+    background-color: rgba($white, 0.01);
+    border: 1px solid rgba($white, 0.03);
+    border-radius: $radius-lg;
+    padding: $spacing-md;
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-sm;
+  }
+
+  &__chips-title {
+    font-family: $font-display;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: $text-tertiary;
+    margin: 0;
+  }
+
+  &__chips-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: $spacing-sm;
+
+    @media (min-width: 480px) {
+      grid-template-columns: repeat(4, 1fr);
+    }
+    @media (min-width: 1024px) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+}
+
+/* Chip Stat Micro-Card */
+.chip-stat {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0.6rem $spacing-md;
+  background-color: rgba($white, 0.02);
+  border: 1px solid rgba($white, 0.04);
+  border-radius: $radius-md;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+
+  &:hover {
+    background-color: rgba($brand-purple, 0.02);
+    border-color: rgba($brand-purple, 0.15);
+  }
+
+  &__label {
+    font-family: $font-body;
+    font-size: 0.7rem;
+    font-weight: 500;
+    color: $text-tertiary;
+  }
+
+  &__value {
+    font-family: $font-display;
+    font-size: 1rem;
+    font-weight: 700;
+    color: $text-primary;
+    margin-top: 2px;
+    font-variant-numeric: tabular-nums;
+  }
 }

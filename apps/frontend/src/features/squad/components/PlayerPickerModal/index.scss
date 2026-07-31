@@ -1,0 +1,312 @@
+@use '../../../../variables.scss' as *;
+
+.player-picker-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba($black, 0.75);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: $spacing-md;
+  box-sizing: border-box;
+}
+
+.player-picker-modal {
+  background-color: $background-card;
+  border: 1px solid $border-color;
+  border-radius: $radius-xl;
+  box-shadow: $shadow-lg, 0 0 30px rgba($black, 0.5);
+  width: 100%;
+  max-width: 800px;
+  max-height: 85vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  animation: player-picker-fade-in 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: $spacing-md $spacing-lg;
+    border-bottom: 1px solid rgba($white, 0.05);
+
+    &-title {
+      font-family: $font-display;
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: $text-primary;
+    }
+  }
+
+  &__close-btn {
+    background: transparent;
+    border: none;
+    color: $text-tertiary;
+    font-size: 1.75rem;
+    line-height: 1;
+    cursor: pointer;
+    transition: color 0.15s ease;
+    padding: 0;
+    width: 2rem;
+    height: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: $radius-full;
+
+    &:hover {
+      color: $white;
+      background-color: rgba($white, 0.05);
+    }
+  }
+
+  &__filters {
+    display: grid;
+    grid-template-columns: 2fr 1.25fr 1.25fr;
+    gap: $spacing-md;
+    padding: $spacing-md $spacing-lg;
+    background-color: rgba($black, 0.15);
+    border-bottom: 1px solid rgba($white, 0.03);
+
+    @media (max-width: 640px) {
+      grid-template-columns: 1fr;
+      gap: $spacing-sm;
+      padding: $spacing-md;
+    }
+  }
+
+  &__filter-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  &__label {
+    font-family: $font-display;
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: $text-tertiary;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  &__input {
+    background-color: rgba($black, 0.3);
+    border: 1px solid $border-light;
+    border-radius: $radius-md;
+    height: 2.5rem;
+    padding: 0 $spacing-sm;
+    color: $white;
+    font-family: $font-body;
+    font-size: 0.9rem;
+    outline: none;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+
+    &:focus {
+      border-color: rgba($brand-purple, 0.5);
+      box-shadow: $glow-accent;
+    }
+  }
+
+  &__select {
+    background-color: rgba($black, 0.3);
+    border: 1px solid $border-light;
+    border-radius: $radius-md;
+    height: 2.5rem;
+    padding: 0 $spacing-xs;
+    color: $white;
+    font-family: $font-body;
+    font-size: 0.9rem;
+    outline: none;
+    cursor: pointer;
+    transition: border-color 0.15s ease;
+
+    option {
+      background-color: $background-light;
+      color: $white;
+    }
+
+    &:focus {
+      border-color: rgba($brand-purple, 0.5);
+    }
+  }
+
+  &__results {
+    flex: 1;
+    overflow-y: auto;
+    padding: $spacing-sm $spacing-lg;
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-sm;
+
+    @media (max-width: 640px) {
+      padding: $spacing-sm;
+    }
+  }
+
+  &__empty {
+    padding: $spacing-xl 0;
+    text-align: center;
+    color: $text-tertiary;
+    font-family: $font-body;
+    font-size: 0.9rem;
+    font-style: italic;
+  }
+
+  &__row {
+    display: grid;
+    grid-template-columns: 2fr 3fr 1.5fr;
+    align-items: center;
+    gap: $spacing-md;
+    padding: $spacing-sm $spacing-md;
+    background-color: rgba($background-light, 0.2);
+    border: 1px solid rgba($white, 0.03);
+    border-radius: $radius-lg;
+    transition: border-color 0.15s ease, background-color 0.15s ease;
+
+    @media (max-width: 640px) {
+      grid-template-columns: 1fr;
+      gap: $spacing-sm;
+      padding: $spacing-md;
+    }
+
+    &:hover {
+      border-color: rgba($white, 0.08);
+      background-color: rgba($background-light, 0.35);
+    }
+
+    &--status-issue {
+      border-left: 3px solid $warning-yellow;
+    }
+  }
+
+  &__row-identity {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    overflow: hidden;
+  }
+
+  &__row-name {
+    font-family: $font-body;
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: $text-primary;
+    display: flex;
+    align-items: center;
+    gap: $spacing-xs;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &__status-tag {
+    background-color: rgba($warning-yellow, 0.1);
+    color: $warning-yellow;
+    border: 1px solid rgba($warning-yellow, 0.3);
+    font-family: $font-display;
+    font-weight: 900;
+    font-size: 0.65rem;
+    width: 0.9rem;
+    height: 0.9rem;
+    border-radius: $radius-full;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: help;
+  }
+
+  &__row-meta {
+    display: flex;
+    align-items: center;
+    gap: $spacing-sm;
+  }
+
+  &__row-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: $spacing-sm;
+    text-align: right;
+
+    @media (max-width: 640px) {
+      text-align: left;
+    }
+  }
+
+  &__stat {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__stat-label {
+    font-family: $font-display;
+    font-size: 0.65rem;
+    font-weight: 700;
+    color: $text-tertiary;
+    text-transform: uppercase;
+  }
+
+  &__stat-value {
+    font-family: $font-body;
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: $text-secondary;
+
+    &--success {
+      color: $success-green;
+      font-weight: 700;
+    }
+  }
+
+  &__row-action {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 4px;
+
+    @media (max-width: 640px) {
+      align-items: stretch;
+    }
+
+    button {
+      min-width: 90px;
+    }
+  }
+
+  &__warning {
+    font-family: $font-body;
+    font-size: 0.7rem;
+    color: $error-red;
+    text-align: right;
+    max-width: 110px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+    @media (max-width: 640px) {
+      text-align: left;
+      max-width: none;
+    }
+  }
+}
+
+.font-tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+@keyframes player-picker-fade-in {
+  from {
+    opacity: 0;
+    transform: scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}

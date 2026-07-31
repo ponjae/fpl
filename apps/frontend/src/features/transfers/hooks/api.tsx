@@ -1,9 +1,11 @@
-import { SquadHorizon } from '@fpl/contracts/fpl';
+import { SquadHorizon, TransferPlanRequest, TransferPlan } from '@fpl/contracts/fpl';
 import { useApiError } from '../../api/hooks';
 import {
   useGetUnderPerformersMutation,
   useSuggestTransfersMutation,
+  usePlanTransfersMutation,
 } from '../api';
+import { ApiErrorBody } from '../../api/types';
 
 /**
  * Hook for suggesting replacements for a player.
@@ -47,6 +49,24 @@ export const useGetUnderPerformers = () => {
   return {
     check: run,
     underPerformers: result.data ?? [],
+    isLoading: result.isLoading,
+    error: useApiError(result.error),
+  };
+};
+
+/**
+ * Hook for multi-transfer planning.
+ *
+ * @returns the plan function, the computed transfer plan, loading and error state.
+ */
+export const useTransferPlan = () => {
+  const [planMutation, result] = usePlanTransfersMutation();
+
+  const plan = (req: TransferPlanRequest) => planMutation(req);
+
+  return {
+    plan,
+    transferPlan: result.data,
     isLoading: result.isLoading,
     error: useApiError(result.error),
   };

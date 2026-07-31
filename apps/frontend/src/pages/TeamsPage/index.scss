@@ -1,7 +1,122 @@
 @use '../../variables.scss' as *;
 
 .teams-page {
-  padding: 2rem;
+  padding: $spacing-xl;
+  max-width: 1400px;
+  margin: 0 auto;
   width: 100%;
   box-sizing: border-box;
+
+  &__container {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-xl;
+  }
+}
+
+.teams-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: $spacing-lg;
+  margin-top: $spacing-md;
+}
+
+.team-card {
+  background-color: $background-card;
+  border: 1px solid $border-color;
+  border-radius: $radius-lg;
+  overflow: hidden;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: $shadow-sm;
+
+  &:hover {
+    transform: translateY(-4px);
+    border-color: $brand-purple;
+    box-shadow: $shadow-lg, $glow-accent;
+    background-color: rgba($background-light, 0.5);
+
+    .team-card__action {
+      color: $success-green;
+    }
+  }
+
+  &__content {
+    padding: $spacing-lg;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    box-sizing: border-box;
+    gap: $spacing-md;
+  }
+
+  &__header {
+    display: flex;
+    align-items: center;
+    gap: $spacing-md;
+  }
+
+  &__titles {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-xs;
+  }
+
+  &__name {
+    font-family: $font-display;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: $text-primary;
+    margin: 0;
+    line-height: 1.2;
+  }
+
+  &__nickname {
+    font-size: 0.875rem;
+    color: $text-tertiary;
+    font-weight: 500;
+  }
+
+  &__body {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-sm;
+    padding-top: $spacing-sm;
+    border-top: 1px solid rgba($border-color, 0.5);
+  }
+
+  &__info-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.875rem;
+    gap: $spacing-md;
+  }
+
+  &__info-label {
+    color: $text-tertiary;
+  }
+
+  &__info-value {
+    color: $text-secondary;
+    font-weight: 500;
+    text-align: right;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 160px;
+  }
+
+  &__footer {
+    margin-top: auto;
+    padding-top: $spacing-sm;
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  &__action {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: $brand-purple;
+    transition: color 0.2s ease;
+  }
 }

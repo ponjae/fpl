@@ -47,6 +47,8 @@ export const Routes = {
   // Transfers
   TransferSuggestions: '/transfers/suggestions',
   UnderPerformers: '/transfers/underperformers',
+  /** Joint multi-transfer planner — returns the best N-move bundle. */
+  TransferPlan: '/transfers/plan',
 
   // Data
   RefreshData: '/data/refresh',
