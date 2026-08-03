@@ -56,6 +56,7 @@ export const MySquadPage: React.FC = () => {
   const [analysisActive, setAnalysisActive] = useState(false);
   const [planActive, setPlanActive] = useState(false);
   const [selectedFormation, setSelectedFormation] = useState<string>('4-4-2');
+  const [sellingPricesOpen, setSellingPricesOpen] = useState(false);
 
   // Modals / Selection states
   const [isPickerOpen, setIsPickerOpen] = useState(false);
@@ -338,9 +339,8 @@ export const MySquadPage: React.FC = () => {
     setPlanActive(false);
   };
 
-  // The backend validates freeTransfers as an integer 1..2 today. Raising the
-  // cap here is the only frontend change needed when the API widens it.
-  const MAX_FREE_TRANSFERS = 2;
+  // The backend accepts freeTransfers as an integer 1..5.
+  const MAX_FREE_TRANSFERS = 5;
 
   const handleFreeTransfersChange = (n: number) => {
     if (isNaN(n)) return;
@@ -354,6 +354,23 @@ export const MySquadPage: React.FC = () => {
     const clamped = Math.max(0, Math.min(100.0, b));
     saveBank(parseFloat(clamped.toFixed(1)));
     setPlanActive(false);
+  };
+
+  const handleSellingPriceChange = (playerId: number, raw: string) => {
+    if (raw.trim() === '') {
+      savePicks(picks.map((p) => {
+        if (p.id !== playerId) return p;
+        const { sellingPrice: _removed, ...rest } = p;
+        return rest as typeof p;
+      }));
+      return;
+    }
+    const val = parseFloat(raw);
+    if (isNaN(val) || val <= 0) return;
+    const clamped = parseFloat(Math.max(0.1, Math.min(20, val)).toFixed(1));
+    savePicks(picks.map((p) =>
+      p.id === playerId ? { ...p, sellingPrice: clamped } : p
+    ));
   };
 
   const adjustBankBy = (amount: number) => {
@@ -711,7 +728,11 @@ export const MySquadPage: React.FC = () => {
   const triggerPlanTransfers = () => {
     if (!validation.isValid || picks.length !== SQUAD_SIZE) return;
     requestTransferPlan({
-      squad: picks.map((p) => ({ playerId: p.id })),
+      squad: picks.map((p) =>
+        p.sellingPrice !== undefined
+          ? { playerId: p.id, sellingPrice: p.sellingPrice }
+          : { playerId: p.id }
+      ),
       bank,
       freeTransfers,
       horizon: currentHorizon,
@@ -1291,14 +1312,91 @@ export const MySquadPage: React.FC = () => {
                       className="budget-picker__btn"
                       onClick={() => adjustBankBy(1.0)}
                       title="Increase by £1.0m"
-                      disabled={bank >= 100.0 || isGlobalLoading}
-                    >
-                      +1.0
-                    </button>
-                  </div>
+                       disabled={bank >= 100.0 || isGlobalLoading}
+                     >
+                       +1.0
+                     </button>
+                   </div>
+                 </div>
+
+                {/* Selling prices accordion */}
+                <div className="selling-prices-accordion">
+                  <button
+                    type="button"
+                    className="selling-prices-accordion__toggle"
+                    aria-expanded={sellingPricesOpen}
+                    onClick={() => setSellingPricesOpen((v) => !v)}
+                  >
+                    <span>Selling prices (optional)</span>
+                    <span className="selling-prices-accordion__chevron">
+                      {sellingPricesOpen ? '−' : '+'}
+                    </span>
+                  </button>
+                  {sellingPricesOpen && (
+                    <div className="selling-prices-accordion__body">
+                      <p className="selling-prices-accordion__desc">
+                        FPL refunds only part of a price rise, so your selling
+                        price can be lower than the current price. Leave a
+                        player blank to use their current price.
+                      </p>
+                      {picks.filter((p) => !!playersMap[p.id]).length > 0 && (
+                        <>
+                          <p className="selling-prices-accordion__count">
+                            {picks.filter((p) => p.sellingPrice !== undefined).length} of{' '}
+                            {picks.length} set
+                          </p>
+                          <div className="selling-prices-list">
+                            {picks
+                              .filter((p) => !!playersMap[p.id])
+                              .map((p) => {
+                                const player = playersMap[p.id];
+                                return (
+                                  <div key={p.id} className="selling-prices-list__row">
+                                    <PositionBadge
+                                      elementType={player.generalInfo.element_type}
+                                      short
+                                    />
+                                    <span className="selling-prices-list__name">
+                                      {player.generalInfo.web_name}
+                                    </span>
+                                    <span className="selling-prices-list__current">
+                                      {formatPrice(player.generalInfo.now_cost)}
+                                    </span>
+                                    <input
+                                      type="number"
+                                      className="selling-prices-list__input"
+                                      step={0.1}
+                                      min={0.1}
+                                      max={20}
+                                      placeholder={String(player.generalInfo.now_cost / 10)}
+                                      value={p.sellingPrice ?? ''}
+                                      onChange={(e) =>
+                                        handleSellingPriceChange(p.id, e.target.value)
+                                      }
+                                    />
+                                  </div>
+                                );
+                              })}
+                          </div>
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            onClick={() =>
+                              savePicks(
+                                picks.map(({ sellingPrice: _sp, ...rest }) => rest as SavedPick)
+                              )
+                            }
+                            disabled={picks.every((p) => p.sellingPrice === undefined)}
+                          >
+                            Reset to current prices
+                          </Button>
+                        </>
+                      )}
+                    </div>
+                  )}
                 </div>
 
-                <div className="validation-card__actions" style={{ marginTop: 0 }}>
+                 <div className="validation-card__actions" style={{ marginTop: 0 }}>
                   <Button
                     type="button"
                     variant="primary"
@@ -1324,8 +1422,10 @@ export const MySquadPage: React.FC = () => {
 
                 <p className="validation-card__note">
                   Plans use at most your free transfers, so a points hit is never
-                  suggested. Sale proceeds are estimated from each player&apos;s
-                  current price, which may differ from your actual selling price.
+                  suggested.{' '}
+                  {picks.some((p) => p.sellingPrice !== undefined)
+                    ? 'Players without a selling price fall back to their current price.'
+                    : 'Sale proceeds are estimated from each player\u2019s current price, which may differ from your actual selling price.'}
                 </p>
               </div>
 

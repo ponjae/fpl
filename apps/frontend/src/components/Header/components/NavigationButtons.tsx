@@ -19,6 +19,7 @@ export const NAVIGATION_BUTTONS: NavigationItem[] = [
   { label: 'My Squad', route: Routes.MySquad },
   { label: 'Teams', route: Routes.Teams },
   { label: 'Fixtures', route: Routes.Fixtures },
+  { label: 'About', route: Routes.About },
 ];
 
 export const NavigationButtons = ({

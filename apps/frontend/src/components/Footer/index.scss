@@ -1,12 +1,11 @@
 @use '../../variables.scss' as *;
 
 .footer-container {
-  background-color: $background-card;
+  background-color: $background-dark;
   color: $text-secondary;
-  padding: 3rem 2rem 2rem;
-  border-top: 1px solid rgba($white, 0.08);
+  padding: $spacing-lg $spacing-lg;
+  border-top: 1px solid $border-color;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
   width: 100%;
@@ -16,74 +15,71 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 1.5rem;
+    justify-content: center;
+    gap: $spacing-md;
     width: 100%;
     max-width: 1200px;
-    margin-bottom: 2.5rem;
 
     @media (min-width: 768px) {
       flex-direction: row;
       justify-content: space-between;
-    }
-
-    .brand-section {
-      .footer-logo {
-        font-family: $font-display;
-        font-weight: 800;
-        font-size: 1.4rem;
-        letter-spacing: -0.01em;
-        text-transform: uppercase;
-        background: linear-gradient(135deg, $white 0%, $success-green 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        transition: opacity 0.2s ease;
-
-        &:hover {
-          opacity: 0.8;
-        }
-      }
-    }
-
-    .links-section {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 2rem;
-
-      .footer-link {
-        font-family: $font-body;
-        font-size: 0.9rem;
-        font-weight: 500;
-        color: $text-secondary;
-        transition: color 0.15s ease;
-        cursor: pointer;
-
-        &:hover {
-          color: $white;
-        }
-      }
+      gap: 0;
     }
   }
 
-  .footer-bottom {
-    width: 100%;
-    max-width: 1200px;
+  .footer-left {
     display: flex;
-    flex-direction: column;
     align-items: center;
-    gap: 1.25rem;
+  }
 
-    .footer-divider {
-      width: 100%;
-      border: 0;
-      border-top: 1px solid rgba($white, 0.05);
-      margin: 0;
+  .copyright {
+    font-family: $font-body;
+    font-size: 0.8rem;
+    color: $text-tertiary;
+    margin: 0;
+  }
+
+  .footer-right {
+    display: flex;
+    align-items: center;
+  }
+
+  .social-links {
+    display: flex;
+    align-items: center;
+    gap: $spacing-lg;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .social-link-item {
+    display: flex;
+    align-items: center;
+    gap: $spacing-xs;
+    color: $text-tertiary;
+    text-decoration: none;
+    font-size: 0.8rem;
+    font-weight: 500;
+    transition: color 0.15s ease, transform 0.15s ease;
+
+    &:hover {
+      color: $brand-purple;
+      transform: translateY(-1px);
+
+      .social-icon {
+        fill: $brand-purple;
+      }
     }
 
-    .copyright {
+    .social-icon {
+      width: 14px;
+      height: 14px;
+      fill: $text-tertiary;
+      transition: fill 0.15s ease;
+    }
+
+    .social-label {
       font-family: $font-body;
-      font-size: 0.8rem;
-      color: $text-tertiary;
     }
   }
 }

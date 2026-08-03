@@ -5,6 +5,8 @@ export interface SavedPick {
   id: number;
   starting: boolean;
   captain: boolean;
+  /** User-entered FPL selling price in millions. Undefined = use current price. */
+  sellingPrice?: number;
 }
 
 interface StoredPayload {
@@ -23,7 +25,7 @@ interface SquadState {
 }
 
 const STORAGE_KEY = 'fpl_my_squad_v1';
-const SCHEMA_VERSION = 3;
+const SCHEMA_VERSION = 4;
 
 export const useSquadLocalStorage = () => {
   const [squadState, setSquadState] = useState<SquadState>({
@@ -49,7 +51,7 @@ export const useSquadLocalStorage = () => {
         const parsedFreeTransfers = typeof parsed.freeTransfers === 'number' ? parsed.freeTransfers : 1;
         const parsedBank = typeof parsed.bank === 'number' ? parsed.bank : 0.0;
 
-        if (parsedVersion === 1 || parsedVersion === 2 || parsedVersion === 3) {
+        if (parsedVersion === 1 || parsedVersion === 2 || parsedVersion === 3 || parsedVersion === 4) {
           return {
             picks: parsedPicks,
             budget: parsedBudget,

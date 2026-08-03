@@ -1,7 +1,406 @@
 @use '../../variables.scss' as *;
 
 .about-page {
-  padding: 2rem;
   width: 100%;
-  box-sizing: border-box;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: $spacing-md;
+
+  @media (min-width: 768px) {
+    padding: $spacing-lg;
+  }
+}
+
+.about-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: $spacing-xl;
+
+  @media (min-width: 992px) {
+    grid-template-columns: 1.2fr 1fr;
+    gap: $spacing-xxl;
+  }
+}
+
+.about-column {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-lg;
+}
+
+// Cards
+.app-card {
+  background: $background-card;
+  border: 1px solid $border-color;
+  border-radius: $radius-lg;
+  padding: $spacing-lg;
+  margin-bottom: $spacing-lg;
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    border-color: $border-light;
+    box-shadow: $shadow-md;
+  }
+
+  &__header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: $spacing-sm;
+    margin-bottom: $spacing-md;
+  }
+
+  &__badge {
+    font-family: $font-display;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    padding: $spacing-xs $spacing-sm;
+    border-radius: $radius-sm;
+    text-transform: uppercase;
+
+    &.success {
+      background: rgba($success-green, 0.1);
+      color: $success-green;
+      border: 1px solid rgba($success-green, 0.2);
+    }
+
+    &.warning {
+      background: rgba($warning-yellow, 0.1);
+      color: $warning-yellow;
+      border: 1px solid rgba($warning-yellow, 0.2);
+    }
+
+    &.brand {
+      background: rgba($brand-purple, 0.1);
+      color: $brand-purple;
+      border: 1px solid rgba($brand-purple, 0.2);
+    }
+  }
+
+  &__title {
+    font-family: $font-display;
+    font-size: 1.15rem;
+    font-weight: 600;
+    margin: 0;
+    width: 100%;
+    margin-top: $spacing-xs;
+
+    @media (min-width: 576px) {
+      width: auto;
+      margin-top: 0;
+    }
+  }
+
+  &__text {
+    line-height: 1.6;
+    margin-bottom: $spacing-md;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    strong {
+      color: $white;
+    }
+  }
+}
+
+.highlight-link {
+  color: $brand-purple;
+  text-decoration: none;
+  font-weight: 500;
+  border-bottom: 1px dashed rgba($brand-purple, 0.4);
+  transition: color 0.15s ease, border-bottom-color 0.15s ease;
+
+  &:hover {
+    color: lighten($brand-purple, 10%);
+    border-bottom-color: lighten($brand-purple, 10%);
+  }
+}
+
+// Profile Section
+.profile-card {
+  background: $background-card;
+  border: 1px solid $border-color;
+  border-radius: $radius-lg;
+  padding: $spacing-lg;
+  margin-bottom: $spacing-lg;
+}
+
+.profile-header {
+  display: flex;
+  align-items: center;
+  gap: $spacing-md;
+  margin-bottom: $spacing-md;
+}
+
+.profile-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: $radius-full;
+  background: linear-gradient(135deg, $brand-purple, $success-green);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: $font-display;
+  font-weight: 700;
+  color: $black;
+  font-size: 1.1rem;
+  box-shadow: $shadow-sm;
+}
+
+.profile-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.profile-name {
+  font-family: $font-display;
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.profile-title {
+  font-size: 0.85rem;
+  margin-top: 2px;
+}
+
+.profile-bio {
+  p {
+    line-height: 1.6;
+    margin-bottom: 0;
+  }
+}
+
+.profile-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $spacing-sm;
+  margin-top: $spacing-lg;
+}
+
+.social-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: $spacing-sm;
+  padding: $spacing-sm $spacing-md;
+  background: $background-light;
+  border: 1px solid $border-light;
+  border-radius: $radius-md;
+  color: $text-primary;
+  text-decoration: none;
+  font-size: 0.85rem;
+  font-weight: 500;
+  transition: all 0.15s ease;
+
+  &:hover {
+    background: lighten($background-light, 5%);
+    border-color: $text-tertiary;
+    transform: translateY(-1px);
+  }
+
+  .social-icon {
+    width: 16px;
+    height: 16px;
+    fill: currentColor;
+  }
+
+  &.linkedin {
+    &:hover {
+      background: #0077b5;
+      border-color: #0077b5;
+      color: white;
+    }
+  }
+
+  &.github {
+    &:hover {
+      background: #24292e;
+      border-color: #24292e;
+      color: white;
+    }
+  }
+
+  &.secondary-btn {
+    opacity: 0.85;
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+}
+
+// Resume Section
+.resume-section {
+  margin-bottom: $spacing-lg;
+
+  &__title {
+    display: flex;
+    align-items: center;
+    gap: $spacing-sm;
+    margin-bottom: $spacing-md;
+    border-bottom: 1px solid $border-color;
+    padding-bottom: $spacing-xs;
+
+    h4 {
+      font-family: $font-display;
+      font-size: 1.05rem;
+      font-weight: 600;
+      margin: 0;
+    }
+  }
+}
+
+.resume-item {
+  background: rgba($background-card, 0.5);
+  border-left: 3px solid $brand-purple;
+  padding: $spacing-md;
+  border-radius: 0 $radius-md $radius-md 0;
+  margin-bottom: $spacing-sm;
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: $spacing-md;
+    margin-bottom: $spacing-xs;
+    flex-wrap: wrap;
+
+    @media (min-width: 576px) {
+      flex-wrap: nowrap;
+    }
+  }
+
+  &__role {
+    font-size: 0.95rem;
+    font-weight: 600;
+    margin: 0;
+    line-height: 1.4;
+  }
+
+  &__duration {
+    font-family: $font-display;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: $brand-purple;
+    white-space: nowrap;
+    background: rgba($brand-purple, 0.1);
+    padding: 2px 8px;
+    border-radius: $radius-full;
+  }
+
+  &__org {
+    font-size: 0.85rem;
+    margin: 0;
+  }
+}
+
+// Tech tags
+.tech-section {
+  margin-bottom: $spacing-lg;
+}
+
+.tech-title {
+  font-family: $font-display;
+  font-size: 1.05rem;
+  font-weight: 600;
+  margin-bottom: $spacing-sm;
+}
+
+.tech-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $spacing-sm;
+}
+
+.tech-tag {
+  font-size: 0.8rem;
+  font-weight: 500;
+  background: rgba($background-light, 0.5);
+  border: 1px solid $border-color;
+  padding: 4px 10px;
+  border-radius: $radius-full;
+  color: $text-secondary;
+  transition: all 0.15s ease;
+
+  &:hover {
+    color: $success-green;
+    border-color: rgba($success-green, 0.4);
+    background: rgba($success-green, 0.05);
+    transform: translateY(-1px);
+  }
+}
+
+// Extra projects card
+.extra-projects-card {
+  background: $background-card;
+  border: 1px solid $border-color;
+  border-radius: $radius-lg;
+  padding: $spacing-lg;
+  margin-top: $spacing-xl;
+}
+
+.extra-title {
+  font-family: $font-display;
+  font-size: 1.05rem;
+  font-weight: 600;
+  margin-bottom: $spacing-md;
+}
+
+.projects-list {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-sm;
+}
+
+.project-link-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: $spacing-md;
+  padding: $spacing-md;
+  background: rgba($background-light, 0.3);
+  border: 1px solid $border-color;
+  border-radius: $radius-md;
+  text-decoration: none;
+  transition: all 0.15s ease;
+
+  &:hover {
+    background: rgba($background-light, 0.6);
+    border-color: $border-light;
+    transform: translateX(3px);
+
+    .project-arrow {
+      color: $brand-purple;
+      transform: translateX(2px);
+    }
+  }
+}
+
+.project-link-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.project-link-title {
+  color: $text-primary;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.project-link-desc {
+  color: $text-tertiary;
+  font-size: 0.75rem;
+  line-height: 1.4;
+}
+
+.project-arrow {
+  color: $text-tertiary;
+  font-weight: bold;
+  font-size: 1.1rem;
+  transition: all 0.15s ease;
 }

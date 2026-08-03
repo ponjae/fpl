@@ -158,7 +158,7 @@ export class TransferController extends ApplicationController {
    * Body:
    *   - `squad`         (required) array of `{ playerId, sellingPrice? }` — exactly 15 players.
    *   - `bank`          (required) money in the bank, in millions.
-   *   - `freeTransfers` (required) integer 1..2 (currently exposed range).
+   *   - `freeTransfers` (required) integer 1..5.
    *   - `horizon`       (optional) value horizon. Default 'value5'.
    *
    * @param req - the request object.
@@ -214,13 +214,11 @@ export class TransferController extends ApplicationController {
       );
     }
 
-    // Validate freeTransfers — currently capped at 1..2 at the controller
-    // boundary. The MILP constraint itself handles any value 1..5; raise the
-    // cap here to expose more transfers.
+    // Validate freeTransfers — the MILP constraint handles any value 1..5.
     const freeTransfers = body.freeTransfers;
-    if (!Number.isInteger(freeTransfers) || (freeTransfers as number) < 1 || (freeTransfers as number) > 2) {
+    if (!Number.isInteger(freeTransfers) || (freeTransfers as number) < 1 || (freeTransfers as number) > 5) {
       throw toAppError(
-        `'freeTransfers' must be an integer between 1 and 2`,
+        `'freeTransfers' must be an integer between 1 and 5`,
         400,
         'validation'
       );
