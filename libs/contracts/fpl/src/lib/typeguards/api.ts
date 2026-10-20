@@ -168,7 +168,7 @@ export const isEvent = (e: unknown): e is Event =>
   isString(e.name) &&
   (isNumber(e.top_element) || e.top_element === null) &&
   (isTopElementInfo(e.top_element_info) || e.top_element_info === null) &&
-  isNumber(e.transfers_made);
+  (isNumber(e.transfers_made) || e.transfers_made === null);
 
 /**
  * Check if t is an ElementType.

@@ -105,7 +105,7 @@ const eventSchema: Record<string, (v: unknown) => boolean> = {
   name:                isStr,
   top_element:         nullOr(isNum),
   top_element_info:    nullOr((v) => v !== undefined),
-  transfers_made:      isNum,
+  transfers_made:      nullOr(isNum),
 };
 const eventLabels = Object.fromEntries(
   Object.keys(eventSchema).map((k) => [k, eventSchema[k].toString()])

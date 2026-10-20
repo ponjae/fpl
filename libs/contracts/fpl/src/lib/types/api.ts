@@ -151,7 +151,7 @@ export type Event = {
   top_element: number | null;
   /** Null before the gameweek has been played. */
   top_element_info: TopElementInfo | null;
-  transfers_made: number;
+  transfers_made: number | null;
 };
 
 /**

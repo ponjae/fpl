@@ -146,6 +146,16 @@ describe('Typeguards: API', () => {
       expect(isAllData(validData)).toBe(true);
     });
 
+    it('should accept an event with null transfers_made', () => {
+      const dataWithNullTransfersMade = {
+        events: [{ ...validEvent, transfers_made: null }],
+        teams: [validTeam],
+        elements: [validPlayer],
+        element_types: [validElementType],
+      };
+      expect(isAllData(dataWithNullTransfersMade)).toBe(true);
+    });
+
     it('should return false for invalid AllData', () => {
       const invalidData = {
         events: [],
@@ -208,6 +218,20 @@ describe('Typeguards: API', () => {
   describe('isEvent', () => {
     it('should return true for valid Event', () => {
       expect(isEvent(validEvent)).toBe(true);
+    });
+
+    it('should accept null transfers_made', () => {
+      expect(isEvent({ ...validEvent, transfers_made: null })).toBe(true);
+    });
+
+    it('should reject a missing transfers_made', () => {
+      const missingTransfersMade: Record<string, unknown> = { ...validEvent };
+      delete missingTransfersMade.transfers_made;
+      expect(isEvent(missingTransfersMade)).toBe(false);
+    });
+
+    it('should reject an invalid transfers_made value', () => {
+      expect(isEvent({ ...validEvent, transfers_made: '0' })).toBe(false);
     });
 
     it('should return false for invalid Event', () => {
