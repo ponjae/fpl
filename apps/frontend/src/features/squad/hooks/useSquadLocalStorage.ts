@@ -1,5 +1,9 @@
 import { useState, useCallback, useEffect } from 'react';
 import { DEFAULT_BUDGET } from '@fpl/contracts/fpl';
+import {
+  DEFAULT_FREE_TRANSFERS,
+  normalizeStoredFreeTransfers,
+} from '../freeTransfers';
 
 export interface SavedPick {
   id: number;
@@ -31,7 +35,7 @@ export const useSquadLocalStorage = () => {
   const [squadState, setSquadState] = useState<SquadState>({
     picks: [],
     budget: DEFAULT_BUDGET,
-    freeTransfers: 1,
+    freeTransfers: DEFAULT_FREE_TRANSFERS,
     bank: 0.0,
   });
   const [loaded, setLoaded] = useState(false);
@@ -39,16 +43,17 @@ export const useSquadLocalStorage = () => {
   // Safe localStorage read
   const loadSquad = useCallback(() => {
     try {
-      if (typeof window === 'undefined') return { picks: [], budget: DEFAULT_BUDGET, freeTransfers: 1, bank: 0.0 };
+      if (typeof window === 'undefined') return { picks: [], budget: DEFAULT_BUDGET, freeTransfers: DEFAULT_FREE_TRANSFERS, bank: 0.0 };
       const data = window.localStorage.getItem(STORAGE_KEY);
-      if (!data) return { picks: [], budget: DEFAULT_BUDGET, freeTransfers: 1, bank: 0.0 };
+      if (!data) return { picks: [], budget: DEFAULT_BUDGET, freeTransfers: DEFAULT_FREE_TRANSFERS, bank: 0.0 };
 
       const parsed = JSON.parse(data);
       if (parsed && typeof parsed === 'object') {
         const parsedVersion = parsed.version;
         const parsedPicks = Array.isArray(parsed.picks) ? parsed.picks : [];
         const parsedBudget = typeof parsed.budget === 'number' ? parsed.budget : DEFAULT_BUDGET;
-        const parsedFreeTransfers = typeof parsed.freeTransfers === 'number' ? parsed.freeTransfers : 1;
+        // 0 is a valid count and must survive a reload; garbage falls back.
+        const parsedFreeTransfers = normalizeStoredFreeTransfers(parsed.freeTransfers);
         const parsedBank = typeof parsed.bank === 'number' ? parsed.bank : 0.0;
 
         if (parsedVersion === 1 || parsedVersion === 2 || parsedVersion === 3 || parsedVersion === 4) {
@@ -63,10 +68,10 @@ export const useSquadLocalStorage = () => {
     } catch (e) {
       console.error('Failed to read squad from localStorage:', e);
     }
-    return { picks: [], budget: DEFAULT_BUDGET, freeTransfers: 1, bank: 0.0 };
+    return { picks: [], budget: DEFAULT_BUDGET, freeTransfers: DEFAULT_FREE_TRANSFERS, bank: 0.0 };
   }, []);
 
-  const saveSquadState = useCallback((newPicks: SavedPick[], newBudget: number, newFreeTransfers = 1, newBank = 0.0) => {
+  const saveSquadState = useCallback((newPicks: SavedPick[], newBudget: number, newFreeTransfers = DEFAULT_FREE_TRANSFERS, newBank = 0.0) => {
     setSquadState({ picks: newPicks, budget: newBudget, freeTransfers: newFreeTransfers, bank: newBank });
     try {
       if (typeof window !== 'undefined') {
@@ -165,7 +170,7 @@ export const useSquadLocalStorage = () => {
   }, []);
 
   const clearPicks = useCallback(() => {
-    saveSquadState([], DEFAULT_BUDGET, 1, 0.0);
+    saveSquadState([], DEFAULT_BUDGET, DEFAULT_FREE_TRANSFERS, 0.0);
   }, [saveSquadState]);
 
   // Initial load

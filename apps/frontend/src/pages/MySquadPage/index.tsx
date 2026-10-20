@@ -5,32 +5,38 @@ import {
   SQUAD_SIZE,
   STARTING_SIZE,
   MAX_PER_CLUB,
-  DEFAULT_BUDGET,
   SQUAD_RULES,
 } from '@fpl/contracts/fpl';
 
-import { useSquadLocalStorage, SavedPick } from '../../features/squad/hooks';
+import Button from '../../components/Button';
+import ErrorState from '../../components/ErrorState';
+import HorizonTabs from '../../components/HorizonTabs';
+import PageSection from '../../components/PageSection';
+import PositionBadge from '../../components/PositionBadge';
+import SquadPitchView, { SquadPitchPick } from '../../components/SquadPitchView';
+import StatValue from '../../components/StatValue';
+import TeamBadge from '../../components/TeamBadge';
 import { useGetPlayers } from '../../features/players/hooks';
+
+import PlayerActionsModal from '../../features/squad/components/PlayerActionsModal';
+import PlayerPickerModal from '../../features/squad/components/PlayerPickerModal';
+import {
+  FREE_TRANSFER_OPTIONS,
+  buildTransferPlanRequest,
+  clampFreeTransfers,
+  getNoMovePlanMessage,
+  getPlanLoadingMessage,
+  getPlannerNote,
+} from '../../features/squad/freeTransfers';
+import { useSquadLocalStorage, SavedPick } from '../../features/squad/hooks';
+import { useGetOptimalSquad } from '../../features/squad/hooks/api';
 import { useGetTeamNames } from '../../features/teams/hooks';
+import TransferSuggestionsModal from '../../features/transfers/components/TransferSuggestionsModal';
 import {
   useGetUnderPerformers,
   useSuggestTransfers,
   useTransferPlan,
 } from '../../features/transfers/hooks';
-import { useGetOptimalSquad } from '../../features/squad/hooks/api';
-
-import Button from '../../components/Button';
-import PageSection from '../../components/PageSection';
-import TeamBadge from '../../components/TeamBadge';
-import PositionBadge from '../../components/PositionBadge';
-import HorizonTabs from '../../components/HorizonTabs';
-import ErrorState from '../../components/ErrorState';
-import StatValue from '../../components/StatValue';
-import SquadPitchView, { SquadPitchPick } from '../../components/SquadPitchView';
-
-import PlayerPickerModal from '../../features/squad/components/PlayerPickerModal';
-import PlayerActionsModal from '../../features/squad/components/PlayerActionsModal';
-import TransferSuggestionsModal from '../../features/transfers/components/TransferSuggestionsModal';
 
 import { formatPrice, formatValue, getPositionShortLabel } from '../../utils';
 import './index.scss';
@@ -339,12 +345,11 @@ export const MySquadPage: React.FC = () => {
     setPlanActive(false);
   };
 
-  // The backend accepts freeTransfers as an integer 1..5.
-  const MAX_FREE_TRANSFERS = 5;
-
+  // The backend accepts freeTransfers as an integer 0..5. 0 is a real FPL
+  // state: the plan then keeps the current squad (points hits are not modelled).
   const handleFreeTransfersChange = (n: number) => {
-    if (isNaN(n)) return;
-    const clamped = Math.max(1, Math.min(MAX_FREE_TRANSFERS, Math.round(n)));
+    const clamped = clampFreeTransfers(n);
+    if (clamped === undefined) return;
     saveFreeTransfers(clamped);
     setPlanActive(false);
   };
@@ -598,10 +603,9 @@ export const MySquadPage: React.FC = () => {
       captain: false,
     };
 
-    let newPicks = [...picks];
+    const newPicks = [...picks];
     if (pickerReplaceIndex !== null) {
       // Replace a specific player
-      const oldId = picks[pickerReplaceIndex]?.id;
       const oldPick = picks[pickerReplaceIndex];
       newPicks[pickerReplaceIndex] = {
         ...newPick,
@@ -627,7 +631,7 @@ export const MySquadPage: React.FC = () => {
       const name = player ? player.generalInfo.web_name : 'Player';
       const removedPick = picks[index];
       
-      let newPicks = picks.filter((p) => p.id !== id);
+      const newPicks = picks.filter((p) => p.id !== id);
       
       // If we removed the captain, assign a new captain if possible
       if (removedPick.captain && newPicks.length > 0) {
@@ -727,16 +731,9 @@ export const MySquadPage: React.FC = () => {
   // Fires only from the user's click — never from an effect.
   const triggerPlanTransfers = () => {
     if (!validation.isValid || picks.length !== SQUAD_SIZE) return;
-    requestTransferPlan({
-      squad: picks.map((p) =>
-        p.sellingPrice !== undefined
-          ? { playerId: p.id, sellingPrice: p.sellingPrice }
-          : { playerId: p.id }
-      ),
-      bank,
-      freeTransfers,
-      horizon: currentHorizon,
-    });
+    requestTransferPlan(
+      buildTransferPlanRequest(picks, bank, freeTransfers, currentHorizon)
+    );
     setPlanActive(true);
   };
 
@@ -952,7 +949,7 @@ export const MySquadPage: React.FC = () => {
                   {isPlanLoading ? (
                     <div className="analysis-results-card__loading">
                       <div className="analysis-spinner" />
-                      <span>Planning up to {freeTransfers} transfer{freeTransfers === 1 ? '' : 's'}…</span>
+                      <span>{getPlanLoadingMessage(freeTransfers)}</span>
                     </div>
                   ) : planError ? (
                     <ErrorState
@@ -966,8 +963,7 @@ export const MySquadPage: React.FC = () => {
                   ) : !transferPlan ? null : transferPlan.moves.length === 0 ? (
                     <div className="analysis-results-card__success">
                       <span>
-                        No transfer improves your squad on this horizon. Keeping
-                        your current squad is the best option.
+                        {getNoMovePlanMessage(transferPlan.freeTransfers)}
                       </span>
                     </div>
                   ) : (
@@ -1234,17 +1230,18 @@ export const MySquadPage: React.FC = () => {
 
                 {/* Free transfers */}
                 <div className="optimizer-control-group">
-                  <label
+                  <span
                     className="optimizer-control-label"
-                    htmlFor="free-transfers-input"
+                    id="free-transfers-label"
                   >
                     Free transfers
-                  </label>
-                  <div className="free-transfers-picker">
-                    {Array.from(
-                      { length: MAX_FREE_TRANSFERS },
-                      (_, i) => i + 1
-                    ).map((n) => (
+                  </span>
+                  <div
+                    className="free-transfers-picker"
+                    role="group"
+                    aria-labelledby="free-transfers-label"
+                  >
+                    {FREE_TRANSFER_OPTIONS.map((n) => (
                       <button
                         key={n}
                         type="button"
@@ -1421,8 +1418,7 @@ export const MySquadPage: React.FC = () => {
                 )}
 
                 <p className="validation-card__note">
-                  Plans use at most your free transfers, so a points hit is never
-                  suggested.{' '}
+                  {getPlannerNote(freeTransfers)}{' '}
                   {picks.some((p) => p.sellingPrice !== undefined)
                     ? 'Players without a selling price fall back to their current price.'
                     : 'Sale proceeds are estimated from each player\u2019s current price, which may differ from your actual selling price.'}

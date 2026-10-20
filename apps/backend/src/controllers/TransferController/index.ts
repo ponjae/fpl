@@ -158,7 +158,7 @@ export class TransferController extends ApplicationController {
    * Body:
    *   - `squad`         (required) array of `{ playerId, sellingPrice? }` — exactly 15 players.
    *   - `bank`          (required) money in the bank, in millions.
-   *   - `freeTransfers` (required) integer 1..5.
+   *   - `freeTransfers` (required) integer 0..5.
    *   - `horizon`       (optional) value horizon. Default 'value5'.
    *
    * @param req - the request object.
@@ -214,11 +214,15 @@ export class TransferController extends ApplicationController {
       );
     }
 
-    // Validate freeTransfers — the MILP constraint handles any value 1..5.
+    // Validate freeTransfers — the MILP constraint handles any value 0..5.
     const freeTransfers = body.freeTransfers;
-    if (!Number.isInteger(freeTransfers) || (freeTransfers as number) < 1 || (freeTransfers as number) > 5) {
+    if (
+      !Number.isInteger(freeTransfers) ||
+      (freeTransfers as number) < 0 ||
+      (freeTransfers as number) > 5
+    ) {
       throw toAppError(
-        `'freeTransfers' must be an integer between 1 and 5`,
+        `'freeTransfers' must be an integer between 0 and 5`,
         400,
         'validation'
       );

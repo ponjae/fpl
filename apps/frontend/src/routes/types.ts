@@ -1,6 +1,7 @@
 export const Routes = {
   Home: '/',
   Players: '/players',
+  Stats: '/stats',
   PlayerDetail: '/players/:id',
   Teams: '/teams',
   TeamDetail: '/teams/:id',

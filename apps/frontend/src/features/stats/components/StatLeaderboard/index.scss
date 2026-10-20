@@ -1,0 +1,367 @@
+@use '../../../../variables.scss' as *;
+
+// NOTE: every rule below is written as `.stat-board__*` explicitly nested
+// under `.stat-board` via `&__`, which compiles to `.stat-board__x` — matching
+// the JSX. Do not switch to `&-x` (that yields `.stat-board-x`).
+
+.stat-board {
+  --accent: #{$brand-purple};
+  --accent-rgb: 139, 92, 246;
+
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  background: radial-gradient(
+      120% 60% at 0% 0%,
+      rgba(var(--accent-rgb), 0.12) 0%,
+      transparent 60%
+    ),
+    $background-card;
+  border: 1px solid rgba($white, 0.06);
+  border-radius: $radius-xl;
+  box-shadow: $shadow-md;
+  overflow: hidden;
+  box-sizing: border-box;
+
+  // Accent rule along the top edge.
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--accent), transparent 85%);
+  }
+
+  &--goals {
+    --accent: #{$success-green};
+    --accent-rgb: 0, 255, 135;
+  }
+
+  &--assists {
+    --accent: #{$info-blue};
+    --accent-rgb: 56, 189, 248;
+  }
+
+  &--points {
+    --accent: #{$brand-purple};
+    --accent-rgb: 139, 92, 246;
+  }
+
+  &__header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: $spacing-md;
+    padding: 1.4rem 1.25rem 1rem;
+    border-bottom: 1px solid rgba($white, 0.05);
+  }
+
+  &__titles {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    min-width: 0;
+  }
+
+  &__title {
+    font-family: $font-display;
+    font-weight: 700;
+    font-size: 1.2rem;
+    letter-spacing: -0.015em;
+    color: $white;
+    margin: 0;
+  }
+
+  &__description {
+    font-family: $font-body;
+    font-size: 0.8rem;
+    line-height: 1.45;
+    color: $text-tertiary;
+    margin: 0;
+  }
+
+  &__metric {
+    flex-shrink: 0;
+    font-family: $font-body;
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent);
+    background: rgba(var(--accent-rgb), 0.1);
+    border: 1px solid rgba(var(--accent-rgb), 0.25);
+    padding: 0.3rem 0.6rem;
+    border-radius: $radius-full;
+    white-space: nowrap;
+  }
+
+  &__body {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-md;
+    padding: $spacing-md 0.75rem 1rem;
+    flex: 1;
+  }
+
+  // ---- Rows ---------------------------------------------------------------
+
+  &__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+  }
+
+  &__row {
+    position: relative;
+    display: grid;
+    grid-template-columns: 2.25rem 1.5rem minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 0.65rem;
+    padding: 0.55rem 0.75rem 0.55rem 0.4rem;
+    border-radius: $radius-md;
+    isolation: isolate;
+    transition: background-color 0.2s ease;
+    animation: stat-board-row-in 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
+    animation-delay: calc(var(--i, 0) * 35ms);
+
+    // Share-of-leader bar behind the row.
+    &::before {
+      content: '';
+      position: absolute;
+      inset: 0 auto 0 0;
+      width: var(--share, 0%);
+      border-radius: inherit;
+      background: linear-gradient(
+        90deg,
+        rgba(var(--accent-rgb), 0.02),
+        rgba(var(--accent-rgb), 0.11)
+      );
+      z-index: -1;
+    }
+
+    &:hover {
+      background-color: rgba($white, 0.03);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      animation: none;
+    }
+  }
+
+  &__row--leader {
+    padding-top: 0.8rem;
+    padding-bottom: 0.8rem;
+    background-color: rgba(var(--accent-rgb), 0.05);
+    box-shadow: inset 0 0 0 1px rgba(var(--accent-rgb), 0.22);
+
+    .stat-board__rank {
+      color: $text-on-light;
+      background: var(--accent);
+    }
+
+    .stat-board__name {
+      font-size: 1rem;
+    }
+
+    .stat-board__count {
+      font-size: 1.6rem;
+      color: var(--accent);
+    }
+  }
+
+  &__rank {
+    justify-self: center;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 1.9rem;
+    height: 1.6rem;
+    padding: 0 0.3rem;
+    border-radius: $radius-sm;
+    font-family: $font-display;
+    font-weight: 700;
+    font-size: 0.82rem;
+    font-variant-numeric: tabular-nums;
+    color: $text-secondary;
+    background: rgba($white, 0.04);
+    box-sizing: border-box;
+  }
+
+  &__badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  &__badge-placeholder {
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: $radius-full;
+    background: rgba($white, 0.06);
+  }
+
+  &__who {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    min-width: 0;
+
+    .hyperlink {
+      min-width: 0;
+      max-width: 100%;
+    }
+  }
+
+  &__name {
+    display: block;
+    font-family: $font-body;
+    font-weight: 600;
+    font-size: 0.92rem;
+    color: $text-primary;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: color 0.15s ease;
+
+    &:hover {
+      color: var(--accent);
+    }
+  }
+
+  &__meta {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    min-width: 0;
+
+    .position-badge {
+      flex-shrink: 0;
+    }
+  }
+
+  &__team {
+    display: block;
+    font-family: $font-body;
+    font-size: 0.74rem;
+    color: $text-tertiary;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: color 0.15s ease;
+
+    &:hover {
+      color: $text-secondary;
+    }
+  }
+
+  &__team--unknown:hover {
+    color: $text-tertiary;
+  }
+
+  &__count {
+    font-family: $font-display;
+    font-weight: 700;
+    font-size: 1.2rem;
+    letter-spacing: -0.02em;
+    font-variant-numeric: tabular-nums;
+    color: $white;
+    text-align: right;
+    min-width: 2ch;
+  }
+
+  // ---- Notes --------------------------------------------------------------
+
+  &__notes {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    padding: 0.75rem 0.5rem 0;
+    border-top: 1px dashed rgba($white, 0.07);
+    margin-top: auto;
+  }
+
+  &__note {
+    margin: 0;
+    font-family: $font-body;
+    font-size: 0.74rem;
+    line-height: 1.45;
+    color: $text-tertiary;
+  }
+
+  &__note--strong {
+    color: $text-secondary;
+  }
+
+  // ---- Loading ------------------------------------------------------------
+
+  &__skeleton {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+  }
+
+  &__skeleton-row {
+    height: 2.9rem;
+    border-radius: $radius-md;
+    background: linear-gradient(
+      90deg,
+      rgba($white, 0.025) 0%,
+      rgba($white, 0.06) 50%,
+      rgba($white, 0.025) 100%
+    );
+    background-size: 200% 100%;
+    animation: stat-board-shimmer 1.4s ease-in-out infinite;
+
+    &:first-child {
+      height: 3.6rem;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      animation: none;
+    }
+  }
+
+  &__sr {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  // Shared states sit inside the card, so drop their own heavy framing.
+  .error-state,
+  .empty-state {
+    background: transparent;
+    border: none;
+    box-shadow: none;
+  }
+}
+
+@keyframes stat-board-row-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes stat-board-shimmer {
+  0% {
+    background-position: 100% 0;
+  }
+  100% {
+    background-position: -100% 0;
+  }
+}

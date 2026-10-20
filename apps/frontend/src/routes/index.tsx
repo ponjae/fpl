@@ -8,6 +8,7 @@ export * from './hooks';
 
 const HomePage = lazy(() => import('../pages/HomePage'));
 const PlayersPage = lazy(() => import('../pages/PlayersPage'));
+const StatsPage = lazy(() => import('../pages/StatsPage'));
 const PlayerDetailPage = lazy(() => import('../pages/PlayerDetailPage'));
 const TeamsPage = lazy(() => import('../pages/TeamsPage'));
 const TeamDetailPage = lazy(() => import('../pages/TeamDetailPage'));
@@ -37,6 +38,10 @@ export const router = createBrowserRouter([
       {
         path: Routes.Players,
         element: <PlayersPage />,
+      },
+      {
+        path: Routes.Stats,
+        element: <StatsPage />,
       },
       {
         path: Routes.PlayerDetail,

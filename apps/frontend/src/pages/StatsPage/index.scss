@@ -1,0 +1,93 @@
+@use '../../variables.scss' as *;
+
+.stats-page {
+  padding: 1.5rem;
+  width: 100%;
+  box-sizing: border-box;
+
+  @media (min-width: 768px) {
+    padding: 2.5rem 2rem;
+  }
+
+  &__container {
+    width: 100%;
+    max-width: 1440px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-xl;
+  }
+
+  &__header {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-xs;
+    max-width: 42rem;
+  }
+
+  &__eyebrow {
+    font-family: $font-body;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: $success-green;
+  }
+
+  &__title {
+    font-family: $font-display;
+    font-weight: 800;
+    font-size: 2rem;
+    color: $white;
+    letter-spacing: -0.03em;
+    margin: 0;
+
+    @media (min-width: 768px) {
+      font-size: 2.5rem;
+    }
+  }
+
+  &__subtitle {
+    font-family: $font-body;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    color: $text-secondary;
+    margin: 0;
+  }
+
+  &__notice {
+    margin: 0;
+    font-family: $font-body;
+    font-size: 0.85rem;
+    color: $warning-yellow;
+    background: rgba($warning-yellow, 0.06);
+    border: 1px solid rgba($warning-yellow, 0.2);
+    border-radius: $radius-md;
+    padding: 0.65rem 0.9rem;
+  }
+
+  // One column on phones, two on tablets (points card spans the row),
+  // three side by side on wide screens.
+  &__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: $spacing-lg;
+    align-items: stretch;
+
+    @media (min-width: 760px) {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+
+      > :nth-child(3) {
+        grid-column: 1 / -1;
+      }
+    }
+
+    @media (min-width: 1180px) {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+
+      > :nth-child(3) {
+        grid-column: auto;
+      }
+    }
+  }
+}

@@ -86,11 +86,16 @@ export const useGetTopPlayers = (
   limit = 10,
   direction: SortDirection = 'desc'
 ) => {
-  const { data, isLoading, error } = useGetTopPlayersQuery({
+  const { data, isLoading, error, refetch } = useGetTopPlayersQuery({
     sortKey,
     limit,
     direction,
   });
 
-  return { players: data ?? [], isLoading, error: useApiError(error) };
+  return {
+    players: data ?? [],
+    isLoading,
+    error: useApiError(error),
+    refetch,
+  };
 };
