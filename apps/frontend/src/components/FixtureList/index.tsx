@@ -21,14 +21,6 @@ export const FixtureList: React.FC<FixtureListProps> = ({
   showGameweek = false,
   showKickoffInCompact = false,
 }) => {
-  if (!fixtures || fixtures.length === 0) {
-    return (
-      <div className="fixture-list-empty">
-        No fixtures scheduled for this gameweek.
-      </div>
-    );
-  }
-
   const groupByDayValue = groupByDay ?? !compact;
 
   // Helper to format kickoff details
@@ -159,7 +151,7 @@ export const FixtureList: React.FC<FixtureListProps> = ({
 
   // If grouping is requested, organize by day
   const groupedFixtures = useMemo(() => {
-    if (!groupByDayValue) return null;
+    if (!groupByDayValue || !fixtures || fixtures.length === 0) return null;
 
     const groups: { dayLabel: string; date: Date | null; items: FixtureEntry[] }[] = [];
 
@@ -204,6 +196,14 @@ export const FixtureList: React.FC<FixtureListProps> = ({
 
     return groups;
   }, [fixtures, groupByDayValue]);
+
+  if (!fixtures || fixtures.length === 0) {
+    return (
+      <div className="fixture-list-empty">
+        No fixtures scheduled for this gameweek.
+      </div>
+    );
+  }
 
   return (
     <div
