@@ -11,17 +11,12 @@ export type SocialLink = {
 export const SOCIAL_LINKS: SocialLink[] = [
   {
     label: 'LinkedIn',
-    url: 'https://www.linkedin.com/in/pontus-jaensson48b1811a1',
+    url: 'https://www.linkedin.com/in/pontus-jaensson-48b1811a1',
     icon: 'linkedin',
   },
   {
-    label: 'GitHub (Personal)',
+    label: 'GitHub ',
     url: 'https://github.com/ponjae',
-    icon: 'github',
-  },
-  {
-    label: 'GitHub (Work)',
-    url: 'https://github.com/POJAE',
     icon: 'github',
   },
 ];
@@ -37,7 +32,7 @@ const Footer: React.FC = () => {
             © {currentYear} Real FPL. All rights reserved.
           </Text>
         </div>
-        
+
         <div className="footer-right">
           <div className="social-links">
             {SOCIAL_LINKS.map((link) => (

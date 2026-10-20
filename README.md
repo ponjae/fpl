@@ -1,98 +1,54 @@
-An FPL project intended to help FPL managers with their team
+# FPL Squad Planner
 
-A few years ago, I created an [FPL Python project](https://github.com/ponjae/FPL-project/tree/main) that utilized the FPL API to create a simple website that could be useful for FPL managers when planning their squad and finding hidden gems in the game. Now I want to build a second iteration of the project and apply everything I’ve learned over the past few years, as well as challenge myself to create an even better application with a solid structure.
+This project helps Fantasy Premier League managers explore players and plan
+their squads. A few years ago, I built an [FPL project in Python](https://github.com/ponjae/FPL-project/tree/main) using the FPL API to help managers plan squads and find overlooked players. This is a second iteration, applying what I have learned since and building the application with a more solid structure.
 
-## Run tasks
+## Features
 
-To run the dev server for your app, use:
+- Browse player, team, fixture, and gameweek data, including player value and fixture difficulty.
+- Build a 15-player squad, validate it against FPL rules, and manage the starting XI and formation.
+- Optimize squads by budget and planning horizon, with optional player include/exclude and bench-weight constraints.
+- Analyze underperforming squad players, get replacement suggestions, and plan multiple transfers together.
 
-```sh
-npx nx serve fpl
-```
+## Project structure
 
-To create a production bundle:
+- `apps/frontend` — React application built and served with Vite.
+- `apps/backend` — Express API for FPL data, squad optimization, and transfer planning.
+- `libs` — shared FPL contracts and routes, utilities, and server/network libraries used by the applications.
 
-```sh
-npx nx build fpl
-```
+## Install and run
 
-To see all available targets to run for a project, run:
-
-```sh
-npx nx show project fpl
-```
-
-These targets are either [inferred automatically](https://nx.dev/concepts/inferred-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) or defined in the `project.json` or `package.json` files.
-
-[More about running tasks in the docs &raquo;](https://nx.dev/features/run-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-## Add new projects
-
-While you could add new projects to your workspace manually, you might want to leverage [Nx plugins](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) and their [code generation](https://nx.dev/features/generate-code?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) feature.
-
-Use the plugin's generator to create new projects.
-
-To generate a new application, use:
+Install dependencies from the lockfile:
 
 ```sh
-npx nx g @nx/react:app demo
+npm ci
 ```
 
-To generate a new library, use:
+Start the backend and frontend in separate terminals:
 
 ```sh
-npx nx g @nx/react:lib mylib
+npx nx serve backend
 ```
-
-You can use `npx nx list` to get a list of installed plugins. Then, run `npx nx list <plugin-name>` to learn about more specific capabilities of a particular plugin. Alternatively, [install Nx Console](https://nx.dev/getting-started/editor-setup?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) to browse plugins and generators in your IDE.
-
-[Learn more about Nx plugins &raquo;](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) | [Browse the plugin registry &raquo;](https://nx.dev/plugin-registry?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-## Set up CI!
-
-### Step 1
-
-To connect to Nx Cloud, run the following command:
 
 ```sh
-npx nx connect
+npx nx serve frontend
 ```
 
-Connecting to Nx Cloud ensures a [fast and scalable CI](https://nx.dev/ci/intro/why-nx-cloud?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) pipeline. It includes features such as:
+The frontend is served at `http://localhost:3000`. It proxies `/api` requests to
+the backend at `http://localhost:3001` (the backend's default port).
 
-- [Remote caching](https://nx.dev/ci/features/remote-cache?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Task distribution across multiple machines](https://nx.dev/ci/features/distribute-task-execution?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Automated e2e test splitting](https://nx.dev/ci/features/split-e2e-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Task flakiness detection and rerunning](https://nx.dev/ci/features/flaky-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+The backend fetches live data from the official Fantasy Premier League API,
+including `https://fantasy.premierleague.com/api/bootstrap-static/` and
+`https://fantasy.premierleague.com/api/fixtures/`. Network access to
+`fantasy.premierleague.com` is required for this data.
 
-### Step 2
+## Test and build
 
-Use the following command to configure a CI workflow for your workspace:
+Run an application's tests or build without using the Nx cache:
 
 ```sh
-npx nx g ci-workflow
+npx nx test backend --skip-nx-cache
+npx nx test frontend --skip-nx-cache
+npx nx build backend --skip-nx-cache
+npx nx build frontend --skip-nx-cache
 ```
-
-[Learn more about Nx on CI](https://nx.dev/ci/intro/ci-with-nx#ready-get-started-with-your-provider?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-## Install Nx Console
-
-Nx Console is an editor extension that enriches your developer experience. It lets you run tasks, generate code, and improves code autocompletion in your IDE. It is available for VSCode and IntelliJ.
-
-[Install Nx Console &raquo;](https://nx.dev/getting-started/editor-setup?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-## Useful links
-
-Learn more:
-
-- [Learn more about this workspace setup](https://nx.dev/getting-started/tutorials/react-monorepo-tutorial?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Learn about Nx on CI](https://nx.dev/ci/intro/ci-with-nx?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Releasing Packages with Nx release](https://nx.dev/features/manage-releases?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [What are Nx plugins?](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-And join the Nx community:
-
-- [Discord](https://go.nx.dev/community)
-- [Follow us on X](https://twitter.com/nxdevtools) or [LinkedIn](https://www.linkedin.com/company/nrwl)
-- [Our Youtube channel](https://www.youtube.com/@nxdevtools)
-- [Our blog](https://nx.dev/blog?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
