@@ -137,18 +137,26 @@
 }
 
 .profile-avatar {
-  width: 48px;
-  height: 48px;
+  width: 80px;
+  height: 80px;
+  flex-shrink: 0;
   border-radius: $radius-full;
-  background: linear-gradient(135deg, $brand-purple, $success-green);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: $font-display;
-  font-weight: 700;
-  color: $black;
-  font-size: 1.1rem;
+  // Gradient shows through the transparent border as a thin ring.
+  border: 2px solid transparent;
+  background: linear-gradient(135deg, $brand-purple, $success-green) border-box;
+  overflow: hidden;
   box-shadow: $shadow-sm;
+
+  img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 50% 30%;
+    // Source is a half-body portrait; zoom in on the face.
+    transform: scale(2);
+    transform-origin: 50% 37%;
+  }
 }
 
 .profile-info {

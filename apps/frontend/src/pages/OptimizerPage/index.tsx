@@ -1,45 +1,86 @@
 import React, { useMemo, useState, useEffect, useCallback } from 'react';
-import { useSearchParams } from 'react-router-dom';
 import {
+  OptimalSquad,
   ProcessedPlayer,
   SquadHorizon,
   isSquadHorizon,
-  SQUAD_SIZE,
-  DEFAULT_BUDGET
+  DEFAULT_BUDGET,
 } from '@fpl/contracts/fpl';
-
-import { useGetOptimalSquad, useOptimizeSquad } from '../../features/squad/hooks';
-import { useGetPlayers } from '../../features/players/hooks';
-import { useGetTeamNames } from '../../features/teams/hooks';
+import { useSearchParams } from 'react-router-dom';
 
 import Button from '../../components/Button';
+import ErrorState from '../../components/ErrorState';
 import HorizonTabs from '../../components/HorizonTabs';
 import PageSection from '../../components/PageSection';
-import TeamBadge from '../../components/TeamBadge';
 import PositionBadge from '../../components/PositionBadge';
-import ErrorState from '../../components/ErrorState';
-import StatValue from '../../components/StatValue';
 import SquadPitchView from '../../components/SquadPitchView';
+import StatValue from '../../components/StatValue';
+import TeamBadge from '../../components/TeamBadge';
+import { useGetPlayers } from '../../features/players/hooks';
+import {
+  useGetOptimalSquad,
+  useOptimizeSquad,
+} from '../../features/squad/hooks';
+import { useGetTeamNames } from '../../features/teams/hooks';
 
 import { formatPrice, formatValue } from '../../utils';
 import './index.scss';
+
+const BUDGET_MIN = 50.0;
+const BUDGET_MAX = 150.0;
+
+/** Round a £m amount to the nearest £0.1m. */
+const roundBudget = (value: number): number => Math.round(value * 10) / 10;
+
+/** Parse the typed budget text into a rounded number, or null if it isn't a number. */
+const parseBudgetDraft = (draft: string): number | null => {
+  const normalized = draft.trim().replace(',', '.');
+  if (!/^\d+(\.\d*)?$|^\.\d+$/.test(normalized)) return null;
+  const parsed = Number(normalized);
+  return Number.isFinite(parsed) ? roundBudget(parsed) : null;
+};
+
+const isBudgetInRange = (value: number): boolean =>
+  value >= BUDGET_MIN && value <= BUDGET_MAX;
+
+/** True when a squad was built for exactly this horizon and budget. */
+const isSquadFor = (
+  squad: OptimalSquad | undefined,
+  horizon: SquadHorizon,
+  budget: number
+): squad is OptimalSquad =>
+  squad !== undefined &&
+  squad.horizon === horizon &&
+  Math.abs(squad.budget - budget) < 0.05;
 
 export const OptimizerPage: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
 
   // 1. Read & Validate Search Params (Horizon and Budget)
   const rawHorizon = searchParams.get('horizon');
-  const validHorizon: SquadHorizon = isSquadHorizon(rawHorizon) ? rawHorizon : 'value5';
+  const validHorizon: SquadHorizon = isSquadHorizon(rawHorizon)
+    ? rawHorizon
+    : 'value5';
 
   const rawBudget = searchParams.get('budget');
   const validBudget = useMemo(() => {
     if (!rawBudget) return DEFAULT_BUDGET;
     const parsed = parseFloat(rawBudget);
-    if (!isNaN(parsed) && parsed >= 50.0 && parsed <= 150.0) {
-      return parseFloat(parsed.toFixed(1)); // round to 1 decimal place
+    if (!isNaN(parsed) && parsed >= BUDGET_MIN && parsed <= BUDGET_MAX) {
+      return roundBudget(parsed);
     }
     return DEFAULT_BUDGET;
   }, [rawBudget]);
+
+  // Budget being edited. Only applied to the URL (and the query) on submit.
+  const [budgetDraft, setBudgetDraft] = useState(() => validBudget.toFixed(1));
+  const [showBudgetError, setShowBudgetError] = useState(false);
+
+  // Keep the draft in sync when the applied budget changes (apply, back/forward, shared links).
+  useEffect(() => {
+    setBudgetDraft(validBudget.toFixed(1));
+    setShowBudgetError(false);
+  }, [validBudget]);
 
   // 2. Local Advanced Controls State (Unserialized)
   const [isAdvancedOpen, setIsAdvancedOpen] = useState(false);
@@ -92,7 +133,10 @@ export const OptimizerPage: React.FC = () => {
 
   // Helper to change search parameters
   const updateSearchParams = useCallback(
-    (updates: Record<string, string | undefined>) => {
+    (
+      updates: Record<string, string | undefined>,
+      { keepCustomResult = false }: { keepCustomResult?: boolean } = {}
+    ) => {
       const newParams = new URLSearchParams(searchParams);
       Object.entries(updates).forEach(([key, val]) => {
         if (val === undefined || val === '') {
@@ -103,7 +147,7 @@ export const OptimizerPage: React.FC = () => {
       });
       setSearchParams(newParams, { replace: true });
       // Reset mutation view back to standard query when primary parameters change
-      setShowMutationResult(false);
+      if (!keepCustomResult) setShowMutationResult(false);
     },
     [searchParams, setSearchParams]
   );
@@ -112,14 +156,25 @@ export const OptimizerPage: React.FC = () => {
     updateSearchParams({ horizon: h });
   };
 
-  const handleBudgetChange = (b: number) => {
-    // Clamp to [50.0, 150.0] and format to 1 decimal place
-    const clamped = Math.max(50.0, Math.min(150.0, b));
-    updateSearchParams({ budget: clamped.toFixed(1) });
-  };
+  // Budget draft derived state
+  const parsedDraft = parseBudgetDraft(budgetDraft);
+  const isDraftValid = parsedDraft !== null && isBudgetInRange(parsedDraft);
+  const isBudgetPending = parsedDraft === null || parsedDraft !== validBudget;
+  const isDraftEdited = budgetDraft !== validBudget.toFixed(1);
+  const isBudgetErrorVisible = showBudgetError && !isDraftValid;
+  const stepperBase = parsedDraft ?? validBudget;
 
   const adjustBudgetBy = (amount: number) => {
-    handleBudgetChange(validBudget + amount);
+    const next = Math.max(
+      BUDGET_MIN,
+      Math.min(BUDGET_MAX, roundBudget(stepperBase + amount))
+    );
+    setBudgetDraft(next.toFixed(1));
+  };
+
+  const resetBudgetDraft = () => {
+    setBudgetDraft(validBudget.toFixed(1));
+    setShowBudgetError(false);
   };
 
   // 5. Player Pickers Autocomplete Logic
@@ -128,10 +183,13 @@ export const OptimizerPage: React.FC = () => {
     if (!q || allPlayers.length === 0) return [];
     return allPlayers
       .filter((p) => {
-        const fullName = `${p.generalInfo.first_name} ${p.generalInfo.web_name}`.toLowerCase();
-        return fullName.includes(q) &&
+        const fullName =
+          `${p.generalInfo.first_name} ${p.generalInfo.web_name}`.toLowerCase();
+        return (
+          fullName.includes(q) &&
           !includedIds.includes(p.generalInfo.id) &&
-          !excludedIds.includes(p.generalInfo.id);
+          !excludedIds.includes(p.generalInfo.id)
+        );
       })
       .slice(0, 5); // Limit to top 5 matches
   }, [pickerQuery, allPlayers, includedIds, excludedIds]);
@@ -159,16 +217,43 @@ export const OptimizerPage: React.FC = () => {
   };
 
   // Run Custom Advanced Optimization
-  const handleOptimizeCustom = async () => {
+  const runCustomOptimize = async (budget: number) => {
     await optimize({
       horizon: validHorizon,
-      budget: validBudget,
+      budget,
       benchWeight,
       benchGkWeight,
       include: includedIds,
       exclude: excludedIds,
     });
     setShowMutationResult(true);
+  };
+
+  const handleOptimizeCustom = () => {
+    void runCustomOptimize(validBudget);
+  };
+
+  // Apply the drafted budget: the only path that changes the URL budget.
+  const handleBudgetSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (isSquadLoading) return;
+    if (parsedDraft === null || !isBudgetInRange(parsedDraft)) {
+      setShowBudgetError(true);
+      return;
+    }
+    setShowBudgetError(false);
+    setBudgetDraft(parsedDraft.toFixed(1));
+    if (parsedDraft === validBudget) return;
+
+    // In custom mode keep the constraints and rebuild the custom squad for the new budget.
+    const keepCustomResult = showMutationResult;
+    updateSearchParams(
+      { budget: parsedDraft.toFixed(1) },
+      { keepCustomResult }
+    );
+    if (keepCustomResult) {
+      void runCustomOptimize(parsedDraft);
+    }
   };
 
   // Reset to default optimal squad
@@ -181,10 +266,20 @@ export const OptimizerPage: React.FC = () => {
     setPickerQuery('');
   };
 
-  // 6. Select current squad and stats based on active view
-  const displaySquad = showMutationResult && mutationSquad ? mutationSquad : querySquad;
+  // 6. Select current squad and stats based on active view.
+  // Only show a squad built for the applied horizon and budget, so a stale
+  // result (or a failed rebuild) is never labelled as the current squad.
+  const displaySquad = showMutationResult
+    ? isSquadFor(mutationSquad, validHorizon, validBudget)
+      ? mutationSquad
+      : undefined
+    : isSquadFor(querySquad, validHorizon, validBudget)
+    ? querySquad
+    : undefined;
   const isSquadLoading = isQueryLoading || isMutationLoading;
-  const activeError = showMutationResult ? (mutationError || queryError) : queryError;
+  const activeError = showMutationResult
+    ? mutationError || queryError
+    : queryError;
 
   // Sync mutation state: if mutation was requested but failed, or if we need to fall back
   useEffect(() => {
@@ -242,20 +337,43 @@ export const OptimizerPage: React.FC = () => {
 
                 {/* Horizon Tab Picker */}
                 <div className="optimizer-control-group">
-                  <label className="optimizer-control-label" id="horizon-label">Optimization Horizon</label>
-                  <HorizonTabs value={validHorizon} onChange={handleHorizonChange} />
+                  <label className="optimizer-control-label" id="horizon-label">
+                    Optimization Horizon
+                  </label>
+                  <HorizonTabs
+                    value={validHorizon}
+                    onChange={handleHorizonChange}
+                  />
                 </div>
 
-                {/* Budget Multi-Selector */}
-                <div className="optimizer-control-group">
-                  <label className="optimizer-control-label" htmlFor="budget-input">Squad Budget (£m)</label>
-                  <div className="budget-picker">
+                {/* Budget Multi-Selector: edits a draft; "Update squad" applies it */}
+                <form
+                  className="optimizer-control-group budget-form"
+                  onSubmit={handleBudgetSubmit}
+                  noValidate
+                >
+                  <label
+                    className="optimizer-control-label"
+                    htmlFor="budget-input"
+                  >
+                    Squad Budget (£m)
+                  </label>
+                  <div
+                    className={`budget-picker ${
+                      isBudgetErrorVisible
+                        ? 'budget-picker--invalid'
+                        : isBudgetPending
+                        ? 'budget-picker--pending'
+                        : ''
+                    }`}
+                  >
                     <button
                       type="button"
                       className="budget-picker__btn"
                       onClick={() => adjustBudgetBy(-1.0)}
                       title="Decrease by £1.0m"
-                      disabled={validBudget <= 50.0 || isSquadLoading}
+                      aria-label="Decrease budget by £1.0m"
+                      disabled={stepperBase <= BUDGET_MIN}
                     >
                       -1.0
                     </button>
@@ -264,30 +382,36 @@ export const OptimizerPage: React.FC = () => {
                       className="budget-picker__btn budget-picker__btn--small"
                       onClick={() => adjustBudgetBy(-0.1)}
                       title="Decrease by £0.1m"
-                      disabled={validBudget <= 50.0 || isSquadLoading}
+                      aria-label="Decrease budget by £0.1m"
+                      disabled={stepperBase <= BUDGET_MIN}
                     >
                       -0.1
                     </button>
                     <input
                       id="budget-input"
-                      type="number"
+                      type="text"
+                      inputMode="decimal"
+                      autoComplete="off"
                       className="budget-picker__input"
-                      value={validBudget}
-                      step={0.1}
-                      min={50.0}
-                      max={150.0}
-                      onChange={(e) => {
-                        const val = parseFloat(e.target.value);
-                        if (!isNaN(val)) handleBudgetChange(val);
+                      value={budgetDraft}
+                      onChange={(e) => setBudgetDraft(e.target.value)}
+                      onBlur={() => {
+                        if (isDraftValid && parsedDraft !== null) {
+                          setBudgetDraft(parsedDraft.toFixed(1));
+                        } else {
+                          setShowBudgetError(true);
+                        }
                       }}
-                      disabled={isSquadLoading}
+                      aria-invalid={isBudgetErrorVisible}
+                      aria-describedby="budget-status"
                     />
                     <button
                       type="button"
                       className="budget-picker__btn budget-picker__btn--small"
                       onClick={() => adjustBudgetBy(0.1)}
                       title="Increase by £0.1m"
-                      disabled={validBudget >= 150.0 || isSquadLoading}
+                      aria-label="Increase budget by £0.1m"
+                      disabled={stepperBase >= BUDGET_MAX}
                     >
                       +0.1
                     </button>
@@ -296,12 +420,58 @@ export const OptimizerPage: React.FC = () => {
                       className="budget-picker__btn"
                       onClick={() => adjustBudgetBy(1.0)}
                       title="Increase by £1.0m"
-                      disabled={validBudget >= 150.0 || isSquadLoading}
+                      aria-label="Increase budget by £1.0m"
+                      disabled={stepperBase >= BUDGET_MAX}
                     >
                       +1.0
                     </button>
                   </div>
-                </div>
+
+                  <div
+                    id="budget-status"
+                    className={`budget-status ${
+                      isBudgetErrorVisible
+                        ? 'budget-status--error'
+                        : isBudgetPending
+                        ? 'budget-status--pending'
+                        : ''
+                    }`}
+                    aria-live="polite"
+                  >
+                    <span>
+                      {isBudgetErrorVisible
+                        ? `Enter an amount between ${formatPrice(
+                            BUDGET_MIN
+                          )} and ${formatPrice(BUDGET_MAX)}.`
+                        : isBudgetPending
+                        ? `Not applied yet. Showing squad for ${formatPrice(
+                            validBudget
+                          )}.`
+                        : isSquadLoading
+                        ? `Updating squad for ${formatPrice(validBudget)}…`
+                        : `Showing squad for ${formatPrice(validBudget)}.`}
+                    </span>
+                    {isDraftEdited && (
+                      <button
+                        type="button"
+                        className="budget-status__reset"
+                        onClick={resetBudgetDraft}
+                      >
+                        Reset
+                      </button>
+                    )}
+                  </div>
+
+                  <Button
+                    type="submit"
+                    variant="primary"
+                    disabled={!isBudgetPending || !isDraftValid}
+                    loading={isSquadLoading}
+                    className="budget-form__submit"
+                  >
+                    {isSquadLoading ? 'Updating squad…' : 'Update squad'}
+                  </Button>
+                </form>
               </div>
 
               {/* Advanced Accordion Card */}
@@ -312,19 +482,36 @@ export const OptimizerPage: React.FC = () => {
                   onClick={() => setIsAdvancedOpen(!isAdvancedOpen)}
                   aria-expanded={isAdvancedOpen}
                 >
-                  <span className="advanced-toggle__title">Advanced Constraints</span>
-                  <span className={`advanced-toggle__icon ${isAdvancedOpen ? 'is-open' : ''}`}>
+                  <span className="advanced-toggle__title">
+                    Advanced Constraints
+                  </span>
+                  <span
+                    className={`advanced-toggle__icon ${
+                      isAdvancedOpen ? 'is-open' : ''
+                    }`}
+                  >
                     ▼
                   </span>
                 </button>
 
-                <div className={`advanced-content ${isAdvancedOpen ? 'is-open' : ''}`}>
+                <div
+                  className={`advanced-content ${
+                    isAdvancedOpen ? 'is-open' : ''
+                  }`}
+                >
                   <div className="advanced-content__inner">
                     {/* Bench Weight Sliders */}
                     <div className="optimizer-control-group">
                       <div className="slider-header">
-                        <label className="optimizer-control-label" htmlFor="bench-weight">Bench Outfield Weight</label>
-                        <span className="slider-value">{benchWeight.toFixed(2)}</span>
+                        <label
+                          className="optimizer-control-label"
+                          htmlFor="bench-weight"
+                        >
+                          Bench Outfield Weight
+                        </label>
+                        <span className="slider-value">
+                          {benchWeight.toFixed(2)}
+                        </span>
                       </div>
                       <input
                         id="bench-weight"
@@ -334,18 +521,28 @@ export const OptimizerPage: React.FC = () => {
                         max="1.0"
                         step="0.05"
                         value={benchWeight}
-                        onChange={(e) => setBenchWeight(parseFloat(e.target.value))}
+                        onChange={(e) =>
+                          setBenchWeight(parseFloat(e.target.value))
+                        }
                         disabled={isSquadLoading}
                       />
                       <span className="advanced-hint">
-                        Weight multiplier for outfield substitutes. Default 0.20.
+                        Weight multiplier for outfield substitutes. Default
+                        0.20.
                       </span>
                     </div>
 
                     <div className="optimizer-control-group">
                       <div className="slider-header">
-                        <label className="optimizer-control-label" htmlFor="bench-gk-weight">Bench GK Weight</label>
-                        <span className="slider-value">{benchGkWeight.toFixed(2)}</span>
+                        <label
+                          className="optimizer-control-label"
+                          htmlFor="bench-gk-weight"
+                        >
+                          Bench GK Weight
+                        </label>
+                        <span className="slider-value">
+                          {benchGkWeight.toFixed(2)}
+                        </span>
                       </div>
                       <input
                         id="bench-gk-weight"
@@ -355,7 +552,9 @@ export const OptimizerPage: React.FC = () => {
                         max="0.5"
                         step="0.01"
                         value={benchGkWeight}
-                        onChange={(e) => setBenchGkWeight(parseFloat(e.target.value))}
+                        onChange={(e) =>
+                          setBenchGkWeight(parseFloat(e.target.value))
+                        }
                         disabled={isSquadLoading}
                       />
                       <span className="advanced-hint">
@@ -365,7 +564,12 @@ export const OptimizerPage: React.FC = () => {
 
                     {/* Inclusion & Exclusion Picker */}
                     <div className="optimizer-control-group">
-                      <label className="optimizer-control-label" htmlFor="player-picker-input">Lock or Ban Players</label>
+                      <label
+                        className="optimizer-control-label"
+                        htmlFor="player-picker-input"
+                      >
+                        Lock or Ban Players
+                      </label>
                       <div className="player-picker">
                         <input
                           id="player-picker-input"
@@ -377,9 +581,14 @@ export const OptimizerPage: React.FC = () => {
                           disabled={isSquadLoading || isGlobalLoading}
                         />
                         {pickerSearchResults.length > 0 && (
-                          <div className="player-picker__dropdown" role="listbox">
+                          <div
+                            className="player-picker__dropdown"
+                            role="listbox"
+                          >
                             {pickerSearchResults.map((player) => {
-                              const teamName = teamNamesById[player.generalInfo.team] || 'Unknown';
+                              const teamName =
+                                teamNamesById[player.generalInfo.team] ||
+                                'Unknown';
                               return (
                                 <div
                                   key={`picker-res-${player.generalInfo.id}`}
@@ -392,10 +601,20 @@ export const OptimizerPage: React.FC = () => {
                                       {player.generalInfo.web_name}
                                     </div>
                                     <div className="player-picker__result-meta">
-                                      <TeamBadge teamName={teamName} size="sm" />
-                                      <PositionBadge elementType={player.generalInfo.element_type} short />
+                                      <TeamBadge
+                                        teamName={teamName}
+                                        size="sm"
+                                      />
+                                      <PositionBadge
+                                        elementType={
+                                          player.generalInfo.element_type
+                                        }
+                                        short
+                                      />
                                       <span className="player-picker__result-price">
-                                        {formatPrice(player.generalInfo.now_cost)}
+                                        {formatPrice(
+                                          player.generalInfo.now_cost
+                                        )}
                                       </span>
                                     </div>
                                   </div>
@@ -403,7 +622,9 @@ export const OptimizerPage: React.FC = () => {
                                     <button
                                       type="button"
                                       className="picker-action-btn picker-action-btn--include"
-                                      onClick={() => includePlayer(player.generalInfo.id)}
+                                      onClick={() =>
+                                        includePlayer(player.generalInfo.id)
+                                      }
                                       title="Force player to be in the squad"
                                     >
                                       + Lock
@@ -411,7 +632,9 @@ export const OptimizerPage: React.FC = () => {
                                     <button
                                       type="button"
                                       className="picker-action-btn picker-action-btn--exclude"
-                                      onClick={() => excludePlayer(player.generalInfo.id)}
+                                      onClick={() =>
+                                        excludePlayer(player.generalInfo.id)
+                                      }
                                       title="Prevent player from being selected"
                                     >
                                       + Ban
@@ -429,20 +652,32 @@ export const OptimizerPage: React.FC = () => {
                     <div className="constraints-summary">
                       {/* Included List */}
                       <div className="constraints-list">
-                        <h4 className="constraints-list__title">Locked-in ({includedPlayers.length})</h4>
+                        <h4 className="constraints-list__title">
+                          Locked-in ({includedPlayers.length})
+                        </h4>
                         {includedPlayers.length === 0 ? (
-                          <div className="constraints-list__empty">No locked players</div>
+                          <div className="constraints-list__empty">
+                            No locked players
+                          </div>
                         ) : (
                           <div className="constraints-list__grid">
                             {includedPlayers.map((p) => (
-                              <div key={`inc-chip-${p.generalInfo.id}`} className="constraint-chip constraint-chip--include">
-                                <span className="constraint-chip__name" title={p.generalInfo.web_name}>
+                              <div
+                                key={`inc-chip-${p.generalInfo.id}`}
+                                className="constraint-chip constraint-chip--include"
+                              >
+                                <span
+                                  className="constraint-chip__name"
+                                  title={p.generalInfo.web_name}
+                                >
                                   {p.generalInfo.web_name}
                                 </span>
                                 <button
                                   type="button"
                                   className="constraint-chip__remove"
-                                  onClick={() => removeIncluded(p.generalInfo.id)}
+                                  onClick={() =>
+                                    removeIncluded(p.generalInfo.id)
+                                  }
                                   title="Remove lock"
                                 >
                                   ×
@@ -455,20 +690,32 @@ export const OptimizerPage: React.FC = () => {
 
                       {/* Excluded List */}
                       <div className="constraints-list">
-                        <h4 className="constraints-list__title">Banned ({excludedPlayers.length})</h4>
+                        <h4 className="constraints-list__title">
+                          Banned ({excludedPlayers.length})
+                        </h4>
                         {excludedPlayers.length === 0 ? (
-                          <div className="constraints-list__empty">No banned players</div>
+                          <div className="constraints-list__empty">
+                            No banned players
+                          </div>
                         ) : (
                           <div className="constraints-list__grid">
                             {excludedPlayers.map((p) => (
-                              <div key={`exc-chip-${p.generalInfo.id}`} className="constraint-chip constraint-chip--exclude">
-                                <span className="constraint-chip__name" title={p.generalInfo.web_name}>
+                              <div
+                                key={`exc-chip-${p.generalInfo.id}`}
+                                className="constraint-chip constraint-chip--exclude"
+                              >
+                                <span
+                                  className="constraint-chip__name"
+                                  title={p.generalInfo.web_name}
+                                >
                                   {p.generalInfo.web_name}
                                 </span>
                                 <button
                                   type="button"
                                   className="constraint-chip__remove"
-                                  onClick={() => removeExcluded(p.generalInfo.id)}
+                                  onClick={() =>
+                                    removeExcluded(p.generalInfo.id)
+                                  }
                                   title="Remove ban"
                                 >
                                   ×
@@ -492,7 +739,11 @@ export const OptimizerPage: React.FC = () => {
                       >
                         Optimize with Constraints
                       </Button>
-                      {(showMutationResult || includedIds.length > 0 || excludedIds.length > 0 || benchWeight !== 0.2 || benchGkWeight !== 0.01) && (
+                      {(showMutationResult ||
+                        includedIds.length > 0 ||
+                        excludedIds.length > 0 ||
+                        benchWeight !== 0.2 ||
+                        benchGkWeight !== 0.01) && (
                         <Button
                           type="button"
                           variant="ghost"
@@ -519,7 +770,9 @@ export const OptimizerPage: React.FC = () => {
                       Custom Constraints Active
                     </div>
                     <div className="optimizer-status-bar__details">
-                      Locks: {includedIds.length} · Bans: {excludedIds.length} · Weights: {benchWeight.toFixed(2)} / {benchGkWeight.toFixed(2)}
+                      Locks: {includedIds.length} · Bans: {excludedIds.length} ·
+                      Weights: {benchWeight.toFixed(2)} /{' '}
+                      {benchGkWeight.toFixed(2)}
                     </div>
                     <Button
                       type="button"
@@ -548,8 +801,13 @@ export const OptimizerPage: React.FC = () => {
                 <div className="optimizer-error-container">
                   <ErrorState
                     title="Optimization Error"
-                    message={activeError.message || "An unexpected error occurred while computing the squad."}
-                    onRetry={showMutationResult ? handleOptimizeCustom : undefined}
+                    message={
+                      activeError.message ||
+                      'An unexpected error occurred while computing the squad.'
+                    }
+                    onRetry={
+                      showMutationResult ? handleOptimizeCustom : undefined
+                    }
                   />
                 </div>
               )}
@@ -559,9 +817,13 @@ export const OptimizerPage: React.FC = () => {
                 <div className="optimizer-notice">
                   <div className="optimizer-notice__icon">ℹ</div>
                   <div className="optimizer-notice__content">
-                    <div className="optimizer-notice__title">Heuristic Fallback Used</div>
+                    <div className="optimizer-notice__title">
+                      Heuristic Fallback Used
+                    </div>
                     <div className="optimizer-notice__message">
-                      The optimizer resolved using a fast heuristic fallback. The output is exceptionally strong, but there is a slight chance a marginally better combination exists.
+                      The optimizer resolved using a fast heuristic fallback.
+                      The output is exceptionally strong, but there is a slight
+                      chance a marginally better combination exists.
                     </div>
                   </div>
                 </div>
@@ -572,22 +834,42 @@ export const OptimizerPage: React.FC = () => {
                 <div className="stats-card">
                   <StatValue
                     label="Objective Score"
-                    value={isSquadLoading ? '—' : formatValue(displaySquad?.totalValue, 2)}
+                    value={
+                      isSquadLoading
+                        ? '—'
+                        : formatValue(displaySquad?.totalValue, 2)
+                    }
                     hint="Starter value + captain bonus + weighted bench"
                   />
                 </div>
                 <div className="stats-card">
                   <StatValue
                     label="Squad Cost"
-                    value={isSquadLoading ? '—' : `${formatPrice(displaySquad?.totalCost || 0)}`}
+                    value={
+                      isSquadLoading
+                        ? '—'
+                        : `${formatPrice(displaySquad?.totalCost || 0)}`
+                    }
                     hint={`Limit: ${formatPrice(validBudget)}`}
-                    tone={displaySquad && displaySquad.totalCost > validBudget ? 'danger' : 'default'}
+                    tone={
+                      displaySquad && displaySquad.totalCost > validBudget
+                        ? 'danger'
+                        : 'default'
+                    }
                   />
                 </div>
                 <div className="stats-card">
                   <StatValue
                     label="Remaining Bank"
-                    value={isSquadLoading ? '—' : displaySquad ? `${formatPrice(Math.max(0, validBudget - displaySquad.totalCost))}` : '—'}
+                    value={
+                      isSquadLoading
+                        ? '—'
+                        : displaySquad
+                        ? `${formatPrice(
+                            Math.max(0, validBudget - displaySquad.totalCost)
+                          )}`
+                        : '—'
+                    }
                     hint="Unspent squad value"
                     tone="success"
                   />
@@ -595,7 +877,13 @@ export const OptimizerPage: React.FC = () => {
                 <div className="stats-card">
                   <StatValue
                     label="Candidates Evaluated"
-                    value={isSquadLoading ? '—' : displaySquad ? displaySquad.candidatesConsidered.toLocaleString() : '—'}
+                    value={
+                      isSquadLoading
+                        ? '—'
+                        : displaySquad
+                        ? displaySquad.candidatesConsidered.toLocaleString()
+                        : '—'
+                    }
                     hint="Filtered combinations"
                   />
                 </div>

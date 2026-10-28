@@ -33,12 +33,10 @@ import { BANK_MAX, BANK_MIN, BUDGET_MAX, BUDGET_MIN, clampMoney } from './utils/
 import {
   addPlayerToPicks,
   buildVisualPicks,
-  clearSellingPrices,
   getReplacedPlayerPrice,
   getUnderPerformerIds,
   makeCaptainPick,
   removePick,
-  setPickSellingPrice,
   swapPickAt,
   toSavedPicks,
   toggleStartingPick,
@@ -62,7 +60,6 @@ export const MySquadPage: React.FC = () => {
 
   const [currentHorizon, setCurrentHorizon] = useState<SquadHorizon>('value5');
   const [notification, setNotification] = useState<string | null>(null);
-  const [sellingPricesOpen, setSellingPricesOpen] = useState(false);
 
   const modals = useSquadModals(picks);
 
@@ -156,11 +153,6 @@ export const MySquadPage: React.FC = () => {
     if (isNaN(b)) return;
     saveBank(clampMoney(b, BANK_MIN, BANK_MAX));
     setPlanActive(false);
-  };
-
-  const handleSellingPriceChange = (playerId: number, raw: string) => {
-    const updated = setPickSellingPrice(picks, playerId, raw);
-    if (updated) savePicks(updated);
   };
 
   const triggerAutofill = () => {
@@ -359,15 +351,10 @@ export const MySquadPage: React.FC = () => {
 
               <TransferPlannerCard
                 picks={picks}
-                playersMap={playersMap}
                 freeTransfers={freeTransfers}
                 onFreeTransfersChange={handleFreeTransfersChange}
                 bank={bank}
                 onBankChange={handleBankChange}
-                sellingPricesOpen={sellingPricesOpen}
-                onToggleSellingPrices={() => setSellingPricesOpen((v) => !v)}
-                onSellingPriceChange={handleSellingPriceChange}
-                onResetSellingPrices={() => savePicks(clearSellingPrices(picks))}
                 isSquadValid={validation.isValid}
                 isLoading={isGlobalLoading}
                 isPlanLoading={planner.isLoading}

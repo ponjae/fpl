@@ -1,4 +1,5 @@
 import React from 'react';
+import profilePhoto from '../../assets/profile.jpg';
 import Page, { PageHeader } from '../../components/Page';
 import PageSection from '../../components/PageSection';
 import Text from '../../components/Text';
@@ -22,13 +23,13 @@ const AboutPage: React.FC = () => {
             <PageSection title="About this App">
               <div className="app-card">
                 <div className="app-card__header">
-                  <span className="app-card__badge success">THE GENESIS</span>
+                  <span className="app-card__badge success">THE BEGINNING</span>
                   <Text
                     tagName="h3"
                     variant="primary"
                     className="app-card__title"
                   >
-                    Combining Passion & Code
+                    FPL, Friendship & Botlas
                   </Text>
                 </div>
                 <Text
@@ -36,34 +37,37 @@ const AboutPage: React.FC = () => {
                   variant="secondary"
                   className="app-card__text"
                 >
-                  As a side project during my master's thesis I wanted to learn
-                  Python and combine it with football. The result was a Flask
-                  app giving FPL suggestions. Football has been my greatest
-                  interest for as long as I can remember.
+                  Football has been my greatest interest for as long as I can
+                  remember, but it was at university that I discovered Fantasy
+                  Premier League — and how much more fun it made following the
+                  game. My best friend from university loves football just as
+                  much (even though he supports Spurs...), and since the 2018/19
+                  season we've been competing against each other in the
+                  "coffee of the week" H2H league and in the Port-a-Fort league.
                 </Text>
                 <Text
                   tagName="p"
                   variant="secondary"
                   className="app-card__text"
                 >
-                  During university I discovered Fantasy Premier League — how
-                  much fun it was, and how it helped me enjoy football even
-                  more. My best friend from university also loves football (even
-                  though he supports Spurs...) and since the 2018/19 season
-                  we've been competing against each other in the "coffee of the
-                  week" H2H league and in the Port-a-Fort league.
+                  As our computer science knowledge grew, so did our curiosity
+                  about playing FPL with data. We started digging into the
+                  numbers with pandas and created <strong>Botlas</strong>, a
+                  team picked purely from the data. It did quite well — but we
+                  both managed to beat it, probably because we're such great
+                  managers ourselves...
                 </Text>
               </div>
 
               <div className="app-card">
                 <div className="app-card__header">
-                  <span className="app-card__badge warning">THE EVOLUTION</span>
+                  <span className="app-card__badge warning">THE FIRST APP</span>
                   <Text
                     tagName="h3"
                     variant="primary"
                     className="app-card__title"
                   >
-                    Botlas: The Data-Only Manager
+                    From Data to a Web App
                   </Text>
                 </div>
                 <Text
@@ -71,21 +75,28 @@ const AboutPage: React.FC = () => {
                   variant="secondary"
                   className="app-card__text"
                 >
-                  As our CS knowledge grew, so did our interest in using data to
-                  improve our FPL game. We invented <strong>Botlas</strong>, a
-                  team using only actual data. It worked quite well — but both
-                  of us managed to beat it, probably because we're such great
-                  managers ourselves...
+                  As a side project during my master's thesis, I wanted to make
+                  the idea more intuitive to use and learn Python properly
+                  along the way. The result was a Flask app (
+                  <a
+                    href="https://github.com/ponjae/FPL-project"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="highlight-link"
+                  >
+                    ponjae/FPL-project
+                  </a>
+                  ) that presented the "best" team based on data within a given
+                  budget. It was far from perfect, but it gave useful
+                  inspiration for your own team.
                 </Text>
                 <Text
                   tagName="p"
                   variant="secondary"
                   className="app-card__text"
                 >
-                  This year I wanted to take the idea to the next level. I
-                  wanted to present the "best" team based on data within a given
-                  budget. I know it's not perfect and can definitely be
-                  improved, but it gives useful inspiration about your team.
+                  Building it was a lot of fun and I learned a lot. I hosted it
+                  on Heroku for a while before eventually taking it down.
                 </Text>
               </div>
 
@@ -105,8 +116,8 @@ const AboutPage: React.FC = () => {
                   variant="secondary"
                   className="app-card__text"
                 >
-                  Now, with more experience and after building and hosting
-                  another SPA for my girlfriend's company (
+                  Since then, I've also built and hosted a single-page app for
+                  my wife's company (
                   <a
                     href="https://www.videografonbudget.se/"
                     target="_blank"
@@ -115,8 +126,31 @@ const AboutPage: React.FC = () => {
                   >
                     videografonbudget.se
                   </a>
-                  ), I wanted to challenge myself to build a 2.0 version using
-                  Node, React, and a real backend + frontend.
+                  ), and with that experience I wanted to revisit this project
+                  and turn it into a more complete FPL companion.
+                </Text>
+                <Text
+                  tagName="p"
+                  variant="secondary"
+                  className="app-card__text"
+                >
+                  Working with TypeScript and React every day has also shown me
+                  how much the original UI could be improved. So Version 2.0 is
+                  both a rebuild and a new challenge: a monorepo with a Node
+                  backend and a React frontend, using TypeScript to bring the
+                  two together.
+                </Text>
+                <Text
+                  tagName="p"
+                  variant="secondary"
+                  className="app-card__text"
+                >
+                  The goal is to go beyond suggesting a team: explore players,
+                  build a squad within your budget, and plan transfers for the
+                  gameweeks ahead. It is still a personal project and a place
+                  to keep learning, but the ambition remains the same — turn
+                  football data into useful inspiration, without taking the
+                  fun or the final decision away from the manager.
                 </Text>
               </div>
             </PageSection>
@@ -128,7 +162,13 @@ const AboutPage: React.FC = () => {
               <div className="profile-card">
                 <div className="profile-header">
                   <div className="profile-avatar">
-                    <span>PJ</span>
+                    <img
+                      src={profilePhoto}
+                      alt="Portrait of Pontus Jaensson"
+                      width={80}
+                      height={80}
+                      decoding="async"
+                    />
                   </div>
                   <div className="profile-info">
                     <Text
@@ -284,8 +324,8 @@ const AboutPage: React.FC = () => {
                         videografonbudget.se
                       </span>
                       <span className="project-link-desc">
-                        Single-page application built and hosted for my
-                        girlfriend's company
+                        Single-page application built and hosted for my wife's
+                        company
                       </span>
                     </div>
                     <span className="project-arrow">→</span>

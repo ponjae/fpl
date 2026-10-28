@@ -167,6 +167,61 @@
       color: $text-tertiary;
     }
   }
+
+  &--pending {
+    border-color: rgba($warning-yellow, 0.55);
+  }
+
+  &--invalid {
+    border-color: $error-red;
+  }
+
+  &:focus-within {
+    box-shadow: 0 0 0 2px rgba($white, 0.12);
+  }
+}
+
+// Applied / pending / error helper line below the budget picker
+.budget-status {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: $spacing-sm;
+  min-height: 1.25rem;
+  font-size: 0.8rem;
+  line-height: 1.4;
+  color: $text-tertiary;
+
+  &--pending {
+    color: $warning-yellow;
+  }
+
+  &--error {
+    color: $error-red;
+  }
+
+  &__reset {
+    flex-shrink: 0;
+    background: transparent;
+    border: none;
+    padding: 0;
+    color: $text-secondary;
+    font: inherit;
+    font-weight: 700;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    cursor: pointer;
+
+    &:hover,
+    &:focus-visible {
+      color: $white;
+    }
+  }
+}
+
+.budget-form__submit {
+  width: 100%;
+  justify-content: center;
 }
 
 // Advanced Constraints Accordion Toggle

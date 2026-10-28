@@ -1,5 +1,5 @@
 import React from 'react';
-import { ProcessedPlayer, SQUAD_SIZE } from '@fpl/contracts/fpl';
+import { SQUAD_SIZE } from '@fpl/contracts/fpl';
 
 import Button from '../../../components/Button';
 import {
@@ -9,19 +9,13 @@ import {
 import { SavedPick } from '../../../features/squad/hooks';
 import { BANK_MAX, BANK_MIN } from '../utils/money';
 import MoneyStepper from './MoneyStepper';
-import SellingPricesAccordion from './SellingPricesAccordion';
 
 type TransferPlannerCardProps = {
   picks: SavedPick[];
-  playersMap: Record<number, ProcessedPlayer>;
   freeTransfers: number;
   onFreeTransfersChange: (freeTransfers: number) => void;
   bank: number;
   onBankChange: (bank: number) => void;
-  sellingPricesOpen: boolean;
-  onToggleSellingPrices: () => void;
-  onSellingPriceChange: (playerId: number, raw: string) => void;
-  onResetSellingPrices: () => void;
   isSquadValid: boolean;
   isLoading: boolean;
   isPlanLoading: boolean;
@@ -30,15 +24,10 @@ type TransferPlannerCardProps = {
 
 export const TransferPlannerCard: React.FC<TransferPlannerCardProps> = ({
   picks,
-  playersMap,
   freeTransfers,
   onFreeTransfersChange,
   bank,
   onBankChange,
-  sellingPricesOpen,
-  onToggleSellingPrices,
-  onSellingPriceChange,
-  onResetSellingPrices,
   isSquadValid,
   isLoading,
   isPlanLoading,
@@ -98,15 +87,6 @@ export const TransferPlannerCard: React.FC<TransferPlannerCardProps> = ({
           onChange={onBankChange}
         />
       </div>
-
-      <SellingPricesAccordion
-        isOpen={sellingPricesOpen}
-        onToggle={onToggleSellingPrices}
-        picks={picks}
-        playersMap={playersMap}
-        onSellingPriceChange={onSellingPriceChange}
-        onReset={onResetSellingPrices}
-      />
 
       <div className="validation-card__actions" style={{ marginTop: 0 }}>
         <Button

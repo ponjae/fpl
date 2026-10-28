@@ -198,33 +198,6 @@ export const swapPickAt = (picks: SavedPick[], index: number, playerInId: number
   return newPicks;
 };
 
-/**
- * Applies a selling price typed by the user. A blank value clears it.
- * Returns null when the input should be ignored.
- */
-export const setPickSellingPrice = (
-  picks: SavedPick[],
-  playerId: number,
-  raw: string
-): SavedPick[] | null => {
-  if (raw.trim() === '') {
-    return picks.map((p) => {
-      if (p.id !== playerId) return p;
-      const { sellingPrice: _removed, ...rest } = p;
-      return rest as typeof p;
-    });
-  }
-  const val = parseFloat(raw);
-  if (isNaN(val) || val <= 0) return null;
-  const clamped = parseFloat(Math.max(0.1, Math.min(20, val)).toFixed(1));
-  return picks.map((p) =>
-    p.id === playerId ? { ...p, sellingPrice: clamped } : p
-  );
-};
-
-export const clearSellingPrices = (picks: SavedPick[]): SavedPick[] =>
-  picks.map(({ sellingPrice: _sp, ...rest }) => rest as SavedPick);
-
 /** Current price of the player being replaced in the picker, or 0. */
 export const getReplacedPlayerPrice = (
   picks: SavedPick[],
